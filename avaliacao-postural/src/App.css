@@ -1,38 +1,98 @@
-.App {
-  text-align: center;
+/* App.css */
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f7fb;
+  color: #333;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.app {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  min-height: 100vh;
+}
+
+.header {
+  background: #1f4e79;
   color: white;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.App-link {
-  color: #61dafb;
+.main {
+  flex: 1;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+input[type="file"] {
+  margin-bottom: 30px;
+  padding: 10px;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border 0.3s;
+}
+
+input[type="file"]:hover {
+  border-color: #1f4e79;
+}
+
+.preview-section, .processed-section {
+  margin-top: 20px;
+}
+
+.preview-section h3,
+.processed-section h3 {
+  font-size: 1.3rem;
+  color: #1f4e79;
+  margin-bottom: 10px;
+}
+
+.preview {
+  width: 180px;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-container {
+  max-width: 90%;
+  max-height: 600px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 2px dashed #ccc;
+  padding: 10px;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Para evitar qualquer vazamento */
+}
+
+.processed {
+  max-width: 100%;
+  max-height: 100%;
+  width: 400px;
+  height: auto;
+  object-fit: contain;
+  cursor: crosshair;
+}
+
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  background: #1f4e79;
+  color: white;
+  font-size: 0.9rem;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
 }
