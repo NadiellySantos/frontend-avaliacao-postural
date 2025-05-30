@@ -1,100 +1,114 @@
-import React, { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
-import './App.css';
+import React, { useState, useRef } from "react";
+import axios from "axios";
 
-function App() {
+const App = () => {
   const [imageFile, setImageFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
   const [processedImageUrl, setProcessedImageUrl] = useState(null);
   const [clicks, setClicks] = useState([]);
-  const [distancia, setDistancia] = useState(null);
-
+  const [referencia, setReferencia] = useState(null);
+  const [distancias, setDistancias] = useState([]);
   const imageRef = useRef(null);
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
-      await sendImageToBackend(file);
-    }
-  };
-
-  const sendImageToBackend = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await axios.post('http://localhost:5000/process-image', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        responseType: 'blob',
-      });
-
-      const blob = new Blob([response.data], { type: 'image/jpeg' });
-      const imageUrl = URL.createObjectURL(blob);
-      setProcessedImageUrl(imageUrl);
-    } catch (err) {
-      console.error('Erro ao enviar imagem:', err);
-    }
+    setImageFile(file);
+    setImageUrl(URL.createObjectURL(file));
+    setProcessedImageUrl(null);
+    setClicks([]);
+    setReferencia(null);
+    setDistancias([]);
   };
 
   const handleDoubleClick = (event) => {
     if (!imageRef.current) return;
+
     const rect = imageRef.current.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-
     const novoClick = [...clicks, { x, y }];
 
     if (novoClick.length === 2) {
       const dx = novoClick[1].x - novoClick[0].x;
       const dy = novoClick[1].y - novoClick[0].y;
       const distanciaPixels = Math.sqrt(dx * dx + dy * dy);
-      setDistancia(distanciaPixels.toFixed(2));
+      setReferencia(distanciaPixels.toFixed(2));
       setClicks([]);
+
+      if (imageFile) {
+        sendImageToBackend(imageFile, distanciaPixels);
+      }
     } else {
       setClicks(novoClick);
     }
   };
 
+  const sendImageToBackend = async (file, referenciaPixels) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("referencia_pixels", referenciaPixels);
+
+    try {
+      const response = await axios.post("http://localhost:5000/process-image", formData);
+      const { image, distancias } = response.data;
+      setProcessedImageUrl(`data:image/jpeg;base64,${image}`);
+      setDistancias(distancias);
+    } catch (err) {
+      console.error("Erro ao enviar imagem:", err);
+    }
+  };
+
   return (
-    <div className="app">
-      <header className="header">
-        <h1>Avaliação Postural</h1>
-      </header>
+    <div className="container" style={{ padding: "20px", fontFamily: "Arial" }}>
+      <h2>Avaliação Postural</h2>
 
-      <main className="main">
-        <input type="file" accept="image/*" onChange={handleFileChange} />
+      <input type="file" accept="image/*" onChange={handleFileChange} />
 
-        {previewUrl && (
-          <div className="preview-section">
-            <h3>Imagem Original</h3>
-            <img src={previewUrl} alt="Preview" className="preview" />
-          </div>
-        )}
+      {/* Imagem original só aparece se a processada ainda não tiver sido carregada */}
+      {imageUrl && !processedImageUrl && (
+        <div style={{ marginTop: "20px" }}>
+          <h4>Imagem Original (clique duas vezes para marcar 1 metro):</h4>
+          <img
+            ref={imageRef}
+            src={imageUrl}
+            alt="Selecionada"
+            onDoubleClick={handleDoubleClick}
+            style={{ maxWidth: "100%", cursor: "crosshair", transition: "opacity 0.3s ease" }}
+          />
+        </div>
+      )}
 
-        {processedImageUrl && (
-          <div className="processed-section">
-            <h3>Imagem Processada</h3>
-            <div className="image-container">
-              <img
-                src={processedImageUrl}
-                alt="Processada"
-                ref={imageRef}
-                onDoubleClick={handleDoubleClick}
-                className="processed"
-              />
-            </div>
-            {distancia && (
-              <p className="distancia">Distância medida: {distancia} pixels</p>
-            )}
-          </div>
-        )}
-      </main>
+      {processedImageUrl && (
+        <div style={{ marginTop: "20px" }}>
+          <h4>Imagem Processada:</h4>
+          <img
+            src={processedImageUrl}
+            alt="Processada"
+            style={{ maxWidth: "100%", border: "1px solid #ccc" }}
+          />
+        </div>
+      )}
 
-      <footer className="footer">© 2025 Avaliação Postural</footer>
+      {referencia && (
+        <p style={{ marginTop: "10px" }}>
+          Distância de referência: <strong>{referencia} pixels</strong> (1 metro)
+        </p>
+      )}
+
+      {distancias.length > 0 && (
+        <div style={{ marginTop: "20px" }}>
+          <h4>Distâncias calculadas (cm):</h4>
+          <ul>
+            {distancias.map((d, i) => (
+              <li key={i}>
+                {d.ponto1} ↔ {d.ponto2}: <strong>{d.distancia_cm} cm</strong>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;

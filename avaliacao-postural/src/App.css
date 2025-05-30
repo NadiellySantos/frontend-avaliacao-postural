@@ -1,98 +1,68 @@
-/* App.css */
-
 body {
-  margin: 0;
+  background: #f5f7fa;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f4f7fb;
+  margin: 0;
+  padding: 0;
   color: #333;
 }
 
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-.header {
-  background: #1f4e79;
-  color: white;
-  padding: 20px;
+h2 {
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-.main {
-  flex: 1;
-  padding: 40px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  color: #1e3a8a;
+  margin-bottom: 30px;
 }
 
 input[type="file"] {
-  margin-bottom: 30px;
-  padding: 10px;
-  background-color: white;
-  border: 2px solid #ccc;
+  display: block;
+  margin: 0 auto 20px auto;
+  padding: 8px;
+  border: 1px solid #ccc;
   border-radius: 8px;
+  font-size: 16px;
   cursor: pointer;
-  transition: border 0.3s;
 }
 
-input[type="file"]:hover {
-  border-color: #1f4e79;
-}
-
-.preview-section, .processed-section {
-  margin-top: 20px;
-}
-
-.preview-section h3,
-.processed-section h3 {
-  font-size: 1.3rem;
-  color: #1f4e79;
+h4 {
+  color: #1e40af;
   margin-bottom: 10px;
 }
 
-.preview {
-  width: 180px;
-  max-height: 180px;
-  object-fit: contain;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.image-container {
-  max-width: 90%;
-  max-height: 600px;
-  margin-top: 10px;
-  border-radius: 10px;
-  border: 2px dashed #ccc;
-  padding: 10px;
-  background: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden; /* Para evitar qualquer vazamento */
-}
-
-.processed {
+img {
   max-width: 100%;
-  max-height: 100%;
-  width: 400px;
-  height: auto;
-  object-fit: contain;
-  cursor: crosshair;
+  border-radius: 10px;
+  margin-top: 10px;
+  transition: box-shadow 0.3s ease;
+  height: 700px;
 }
 
-
-.footer {
-  text-align: center;
-  padding: 20px;
-  background: #1f4e79;
-  color: white;
-  font-size: 0.9rem;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+img:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
+
+ul {
+  padding-left: 20px;
+}
+
+li {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+p {
+  font-size: 16px;
+  background-color: #e0f2fe;
+  padding: 10px;
+  border-left: 5px solid #0284c7;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
