@@ -1,7 +1,10 @@
 import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const App = () => {
+  const navigate = useNavigate();
+
   const [imageFile, setImageFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [processedImageUrl, setProcessedImageUrl] = useState(null);
@@ -62,9 +65,23 @@ const App = () => {
     <div className="container" style={{ padding: "20px", fontFamily: "Arial" }}>
       <h2>Avaliação Postural</h2>
 
+      {/* BOTÃO PARA CADASTRO */}
+      <button
+        onClick={() => navigate("/cadastro")}
+        style={{
+          marginBottom: "20px",
+          padding: "10px 20px",
+          backgroundColor: "#28a745",
+          color: "white",
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        Cadastrar Paciente
+      </button>
+
       <input type="file" accept="image/*" onChange={handleFileChange} />
 
-      {/* Imagem original só aparece se a processada ainda não tiver sido carregada */}
       {imageUrl && !processedImageUrl && (
         <div style={{ marginTop: "20px" }}>
           <h4>Imagem Original (clique duas vezes para marcar 1 metro):</h4>
