@@ -6,12 +6,14 @@ const CadastroPaciente = () => {
   const navigate = useNavigate();
 
   const [paciente, setPaciente] = useState({
+    cpf: "",
     nome: "",
-    idade: "",
-    sexo: "",
-    endereco: "",
+    data_nascimento: "",
+    peso: "",
+    raca: "",
+    profissao: "",
     telefone: "",
-    email: "",
+    tipo_corporal: "",
   });
 
   const [mensagem, setMensagem] = useState("");
@@ -35,12 +37,14 @@ const CadastroPaciente = () => {
       setMensagem("Paciente cadastrado com sucesso!");
       console.log(response.data);
       setPaciente({
+        cpf: "",
         nome: "",
-        idade: "",
-        sexo: "",
-        endereco: "",
+        data_nascimento: "",
+        peso: "",
+        raca: "",
+        profissao: "",
         telefone: "",
-        email: "",
+        tipo_corporal: "",
       });
     } catch (error) {
       console.error("Erro ao cadastrar paciente:", error);
@@ -56,12 +60,22 @@ const CadastroPaciente = () => {
     <div className="container">
       <h2>Cadastro de Paciente</h2>
 
-      {/* Botão Voltar */}
       <button onClick={handleVoltar} type="button">
         Voltar
       </button>
 
       <form onSubmit={handleSubmit}>
+        <div>
+          <label>CPF:</label>
+          <input
+            type="text"
+            name="cpf"
+            value={paciente.cpf}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
         <div>
           <label>Nome:</label>
           <input
@@ -74,37 +88,43 @@ const CadastroPaciente = () => {
         </div>
 
         <div>
-          <label>Idade:</label>
+          <label>Data de Nascimento:</label>
           <input
-            type="number"
-            name="idade"
-            value={paciente.idade}
+            type="date"
+            name="data_nascimento"
+            value={paciente.data_nascimento}
             onChange={handleChange}
             required
           />
         </div>
 
         <div>
-          <label>Sexo:</label>
-          <select
-            name="sexo"
-            value={paciente.sexo}
+          <label>Peso (kg):</label>
+          <input
+            type="number"
+            step="0.01"
+            name="peso"
+            value={paciente.peso}
             onChange={handleChange}
-            required
-          >
-            <option value="">Selecione</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Feminino">Feminino</option>
-            <option value="Outro">Outro</option>
-          </select>
+          />
         </div>
 
         <div>
-          <label>Endereço:</label>
+          <label>Raça:</label>
           <input
             type="text"
-            name="endereco"
-            value={paciente.endereco}
+            name="raca"
+            value={paciente.raca}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div>
+          <label>Profissão:</label>
+          <input
+            type="text"
+            name="profissao"
+            value={paciente.profissao}
             onChange={handleChange}
           />
         </div>
@@ -120,11 +140,11 @@ const CadastroPaciente = () => {
         </div>
 
         <div>
-          <label>E-mail:</label>
+          <label>Tipo Corporal:</label>
           <input
-            type="email"
-            name="email"
-            value={paciente.email}
+            type="text"
+            name="tipo_corporal"
+            value={paciente.tipo_corporal}
             onChange={handleChange}
           />
         </div>
