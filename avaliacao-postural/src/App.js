@@ -1,10 +1,12 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const App = () => {
   const navigate = useNavigate();
 
+  const { id } = useParams();
   const [imageFile, setImageFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [processedImageUrl, setProcessedImageUrl] = useState(null);
@@ -64,6 +66,23 @@ const App = () => {
   return (
     <div className="container" style={{ padding: "20px", fontFamily: "Arial" }}>
       <h2>Avaliação Postural</h2>
+
+    {/* BOTÃO VOLTAR */}
+    <button
+      onClick={() => navigate("/")}
+      style={{
+        marginBottom: "10px",
+        padding: "10px 20px",
+        backgroundColor: "#007bff",
+        color: "white",
+        border: "none",
+        cursor: "pointer",
+        marginRight: "10px",
+      }}
+    >
+      Voltar para Pacientes
+    </button>
+
 
       {/* BOTÃO PARA CADASTRO */}
       <button
