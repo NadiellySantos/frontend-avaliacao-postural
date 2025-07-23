@@ -14,6 +14,8 @@ const CadastroPaciente = () => {
     profissao: "",
     telefone: "",
     tipo_corporal: "",
+    idade: "",
+    sexo: "",
   });
 
   const [mensagem, setMensagem] = useState("");
@@ -45,6 +47,8 @@ const CadastroPaciente = () => {
         profissao: "",
         telefone: "",
         tipo_corporal: "",
+        idade: "",
+        sexo: "",
       });
     } catch (error) {
       console.error("Erro ao cadastrar paciente:", error);
@@ -96,6 +100,26 @@ const CadastroPaciente = () => {
             onChange={handleChange}
             required
           />
+        </div>
+
+        <div>
+          <label>Idade:</label>
+          <input
+            type="number"
+            name="idade"
+            value={paciente.idade}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div>
+          <label>Sexo:</label>
+          <select name="sexo" value={paciente.sexo} onChange={handleChange}>
+            <option value="">Selecione</option>
+            <option value="Feminino">Feminino</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Outro">Outro</option>
+          </select>
         </div>
 
         <div>
