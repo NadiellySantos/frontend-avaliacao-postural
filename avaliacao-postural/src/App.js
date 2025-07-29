@@ -99,6 +99,21 @@ const App = () => {
         Cadastrar Paciente
       </button>
 
+       {/* BOTÃO PARA CADASTRO DE MEDICO*/}
+      <button
+        onClick={() => navigate("/cadastroMedico")}
+        style={{
+          marginBottom: "20px",
+          padding: "10px 20px",
+          backgroundColor: "#28a745",
+          color: "white",
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        Cadastrar Médico
+      </button>
+
       <input type="file" accept="image/*" onChange={handleFileChange} />
 
       {imageUrl && !processedImageUrl && (
