@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import InputMask from "react-input-mask";
 
 const CadastroMedico = () => {
   const navigate = useNavigate();
@@ -13,6 +14,8 @@ const CadastroMedico = () => {
     telefone: "",
     crm: "",
     sexo: "",
+    email: "",
+    senha: ""
   });
 
   const [mensagem, setMensagem] = useState("");
@@ -25,13 +28,22 @@ const CadastroMedico = () => {
     }));
   };
 
+  const limparCPF = (cpf) => cpf.replace(/\D/g, "");
+  const limparTelefone = (tel) => tel.replace(/\D/g, "");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      const medicoParaEnvio = {
+        ...medico,
+        cpf: limparCPF(medico.cpf),
+        telefone: limparTelefone(medico.telefone)
+      };
+
       const response = await axios.post(
         "http://localhost:5000/cadastrar-medico",
-        medico,
+        medicoParaEnvio,
         {
           headers: {
             "Content-Type": "application/json",
@@ -39,7 +51,6 @@ const CadastroMedico = () => {
         }
       );
       setMensagem("Médico cadastrado com sucesso!");
-      console.log(response.data);
       setMedico({
         cpf: "",
         nome: "",
@@ -48,10 +59,12 @@ const CadastroMedico = () => {
         telefone: "",
         crm: "",
         sexo: "",
+        email: "",
+        senha: ""
       });
     } catch (error) {
       console.error("Erro ao cadastrar médico:", error.response?.data || error.message);
-      setMensagem("Erro ao cadastrar médico.");
+      setMensagem(error.response?.data?.detail || "Erro ao cadastrar médico.");
     }
   };
 
@@ -70,35 +83,26 @@ const CadastroMedico = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label>CPF:</label>
-          <input
-            type="text"
+          <InputMask
+            mask="999.999.999-99"
             name="cpf"
             value={medico.cpf}
             onChange={handleChange}
             required
-          />
+            title="Digite um CPF válido"
+          >
+            {(inputProps) => <input {...inputProps} type="text" />}
+          </InputMask>
         </div>
 
         <div>
           <label>Nome:</label>
-          <input
-            type="text"
-            name="nome"
-            value={medico.nome}
-            onChange={handleChange}
-            required
-          />
+          <input type="text" name="nome" value={medico.nome} onChange={handleChange} required />
         </div>
 
         <div>
           <label>Data de Nascimento:</label>
-          <input
-            type="date"
-            name="data_nascimento"
-            value={medico.data_nascimento}
-            onChange={handleChange}
-            required
-          />
+          <input type="date" name="data_nascimento" value={medico.data_nascimento} onChange={handleChange} required />
         </div>
 
         <div>
@@ -113,31 +117,42 @@ const CadastroMedico = () => {
 
         <div>
           <label>Especialidade:</label>
-          <input
-            type="text"
-            name="especialidade"
-            value={medico.especialidade}
-            onChange={handleChange}
-          />
+          <input type="text" name="especialidade" value={medico.especialidade} onChange={handleChange} />
         </div>
 
         <div>
           <label>Telefone:</label>
-          <input
-            type="text"
+          <InputMask
+            mask="(99) 99999-9999"
             name="telefone"
             value={medico.telefone}
             onChange={handleChange}
-          />
+            required
+          >
+            {(inputProps) => <input {...inputProps} type="text" />}
+          </InputMask>
         </div>
 
         <div>
           <label>CRM:</label>
+          <input type="text" name="crm" value={medico.crm} onChange={handleChange} />
+        </div>
+
+        <div>
+          <label>Email:</label>
+          <input type="email" name="email" value={medico.email} onChange={handleChange} required />
+        </div>
+
+        <div>
+          <label>Senha:</label>
           <input
-            type="text"
-            name="crm"
-            value={medico.crm}
+            type="password"
+            name="senha"
+            value={medico.senha}
             onChange={handleChange}
+            required
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*#?&]).{8,}"
+            title="A senha deve conter no mínimo 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial."
           />
         </div>
 
@@ -145,13 +160,7 @@ const CadastroMedico = () => {
       </form>
 
       {mensagem && (
-        <p
-          className={
-            mensagem.includes("sucesso")
-              ? "message-success"
-              : "message-error"
-          }
-        >
+        <p className={mensagem.includes("sucesso") ? "message-success" : "message-error"}>
           {mensagem}
         </p>
       )}
