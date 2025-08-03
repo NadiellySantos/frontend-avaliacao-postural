@@ -6,7 +6,7 @@ const Login = () => {
     const navigate = useNavigate();
 
     const [credentials, setCredentials] = useState({
-        cpf: "",
+        email: "",
         senha: ""
     });
 
@@ -36,7 +36,7 @@ const Login = () => {
             setMensagem("Login realizado com sucesso!");
             console.log(response.data);
             // Redirecionar para a página principal ou dashboard
-            navigate("/dashboard");
+            navigate("/index");
         } catch (error) {
             console.error("Erro ao realizar login:", error.response?.data || error.message);
             setMensagem("Erro ao realizar login. Verifique suas credenciais.");
@@ -57,12 +57,12 @@ const Login = () => {
 
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="cpf">CPF:</label>
+                    <label htmlFor="email">E-mail:</label>
                     <input
                         type="text"
-                        id="cpf"
-                        name="cpf"
-                        value={credentials.cpf}
+                        id="email"
+                        name="email"
+                        value={credentials.email}
                         onChange={handleChange}
                         required
                     />
