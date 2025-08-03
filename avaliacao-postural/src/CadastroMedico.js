@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import InputMask from "react-input-mask";
+import { IMaskInput } from 'react-imask';
 
 const CadastroMedico = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const CadastroMedico = () => {
   };
 
   const limparCPF = (cpf) => cpf.replace(/\D/g, "");
-  const limparTelefone = (tel) => tel.replace(/\D/g, "");
+  const limparTelefone = (telefone) => telefone.replace(/\D/g, "");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,16 +84,14 @@ const CadastroMedico = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label>CPF:</label>
-          <InputMask
-            mask="999.999.999-99"
+          <IMaskInput
+            mask="000.000.000-00"
             name="cpf"
             value={medico.cpf}
-            onChange={handleChange}
+            onAccept={(value) => handleChange({target: {name: 'cpf', value}})}
             required
-            title="Digite um CPF válido"
-          >
-            {(inputProps) => <input {...inputProps} type="text" />}
-          </InputMask>
+            className="form-input"
+          />
         </div>
 
         <div>
@@ -122,15 +121,14 @@ const CadastroMedico = () => {
 
         <div>
           <label>Telefone:</label>
-          <InputMask
-            mask="(99) 99999-9999"
+          <IMaskInput
+            mask="(00) 00000-0000"
             name="telefone"
             value={medico.telefone}
-            onChange={handleChange}
+            onAccept={(value) => handleChange({target: {name: 'telefone', value}})}
             required
-          >
-            {(inputProps) => <input {...inputProps} type="text" />}
-          </InputMask>
+            className="form-input"
+          />
         </div>
 
         <div>
