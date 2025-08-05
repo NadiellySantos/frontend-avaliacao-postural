@@ -14,6 +14,7 @@ root.render(
   <BrowserRouter>
     <Routes>
       {/*<Route path="/" element={<Pacientes />} />*/}
+      <Route path="/pacientes" element={<Pacientes />} />
       <Route path="/" element={<Medicos />} />
       <Route path="/cadastro" element={<CadastroPaciente />} />
       <Route path="/cadastroMedico" element={<CadastroMedico />} />
