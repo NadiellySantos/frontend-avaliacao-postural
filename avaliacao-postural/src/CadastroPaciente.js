@@ -5,6 +5,7 @@ import Header from "./header.js";
 import Footer from "./footer.js";
 import "./cadastroPaciente.css";
 import { Helmet } from "react-helmet";
+import { IMaskInput } from 'react-imask';
 
 // Carrega Bootstrap CSS e JS dinamicamente
 const loadBootstrap = () => {
@@ -123,13 +124,12 @@ const CadastroPaciente = () => {
           <form onSubmit={handleSubmit} className="row g-3">
             <div className="col-md-6">
               <label className="form-label">CPF:</label>
-              <input
-                type="text"
+              <IMaskInput
+                mask="000.000.000-00"
                 name="cpf"
-                className="form-control"
-                value={paciente.cpf}
-                onChange={handleChange}
+                onAccept={(value) => handleChange({target: {name: 'cpf', value}})}
                 required
+                className="form-control"
               />
             </div>
 
@@ -219,12 +219,12 @@ const CadastroPaciente = () => {
 
             <div className="col-md-6">
               <label className="form-label">Telefone:</label>
-              <input
-                type="text"
+              <IMaskInput
+                mask="(00) 00000-0000"
                 name="telefone"
+                onAccept={(value) => handleChange({target: {name: 'telefone', value}})}
+                required
                 className="form-control"
-                value={paciente.telefone}
-                onChange={handleChange}
               />
             </div>
 

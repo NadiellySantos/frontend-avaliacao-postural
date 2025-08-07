@@ -1,12 +1,15 @@
 import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import "./App.css";
+import Header from "./header.js";
+import Footer from "./footer.js";
+import { Helmet } from "react-helmet";
 
 const App = () => {
   const navigate = useNavigate();
-
   const { id } = useParams();
+
   const [imageFile, setImageFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [processedImageUrl, setProcessedImageUrl] = useState(null);
@@ -27,7 +30,6 @@ const App = () => {
 
   const handleDoubleClick = (event) => {
     if (!imageRef.current) return;
-
     const rect = imageRef.current.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
@@ -64,101 +66,98 @@ const App = () => {
   };
 
   return (
-    <div className="container" style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h2>Avaliação Postural</h2>
-
-    {/* BOTÃO VOLTAR */}
-    <button
-      onClick={() => navigate("/")}
-      style={{
-        marginBottom: "10px",
-        padding: "10px 20px",
-        backgroundColor: "#007bff",
-        color: "white",
-        border: "none",
-        cursor: "pointer",
-        marginRight: "10px",
-      }}
-    >
-      Voltar para Pacientes
-    </button>
-
-
-      {/* BOTÃO PARA CADASTRO */}
-      <button
-        onClick={() => navigate("/cadastro")}
-        style={{
-          marginBottom: "20px",
-          padding: "10px 20px",
-          backgroundColor: "#28a745",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-        }}
-      >
-        Cadastrar Paciente
-      </button>
-
-       {/* BOTÃO PARA CADASTRO DE MEDICO*/}
-      <button
-        onClick={() => navigate("/cadastroMedico")}
-        style={{
-          marginBottom: "20px",
-          padding: "10px 20px",
-          backgroundColor: "#28a745",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-        }}
-      >
-        Cadastrar Médico
-      </button>
-
-      <input type="file" accept="image/*" onChange={handleFileChange} />
-
-      {imageUrl && !processedImageUrl && (
-        <div style={{ marginTop: "20px" }}>
-          <h4>Imagem Original (clique duas vezes para marcar 1 metro):</h4>
-          <img
-            ref={imageRef}
-            src={imageUrl}
-            alt="Selecionada"
-            onDoubleClick={handleDoubleClick}
-            style={{ maxWidth: "100%", cursor: "crosshair", transition: "opacity 0.3s ease" }}
-          />
+    <>
+      <Helmet>
+        <title>Pacientes - AlignMe</title>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+        />
+        <link
+          rel="stylesheet"
+          href="/assets/css/main.css"
+        />
+        <link
+          rel="stylesheet"
+          href="/pacientes.css"
+        />
+      </Helmet>
+      <div className="d-flex flex-column py-4 min-vh-100">
+        <Header />
+        <div
+          className="page-title text-center text-dark"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('/img/medititle.jpg')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            padding: "40px 0",
+          }}
+        >
+          <h2 className="fw-bold">Avaliação Postural</h2>
         </div>
-      )}
 
-      {processedImageUrl && (
-        <div style={{ marginTop: "20px" }}>
-          <h4>Imagem Processada:</h4>
-          <img
-            src={processedImageUrl}
-            alt="Processada"
-            style={{ maxWidth: "100%", border: "1px solid #ccc" }}
-          />
+        {/* <div className="mb-3">
+          <button onClick={() => navigate("/")} className="btn btn-primary me-2">
+            Voltar para Pacientes
+          </button>
+          <button onClick={() => navigate("/cadastro")} className="btn btn-success me-2">
+            Cadastrar Paciente
+          </button>
+          <button onClick={() => navigate("/cadastroMedico")} className="btn btn-success">
+            Cadastrar Médico
+          </button>
+        </div> */}
+        <div className="container my-5">
+          <input type="file" accept="image/*" onChange={handleFileChange} className="form-control mb-4" />
+
+          {imageUrl && !processedImageUrl && (
+            <div className="container-avaliacao">
+              <div className="imagem-box">
+                <h4>Imagem Original (clique duas vezes para marcar 1 metro):</h4>
+                <img
+                  ref={imageRef}
+                  src={imageUrl}
+                  alt="Selecionada"
+                  onDoubleClick={handleDoubleClick}
+                  style={{ cursor: "crosshair" }}
+                />
+              </div>
+            </div>
+          )}
+
+          {processedImageUrl && (
+            <div className="container-avaliacao">
+              <div className="imagem-box">
+                <h4>Imagem Processada:</h4>
+                <img src={processedImageUrl} alt="Processada" />
+              </div>
+
+              <div className="medicoes-box">
+                <h4>Distâncias calculadas (cm):</h4>
+                <ul className="list-group">
+                  {distancias.map((d, i) => (
+                    <li key={i} className="list-group-item">
+                      {d.ponto1} ↔ {d.ponto2}: <strong>{d.distancia_cm} cm</strong>
+                    </li>
+                  ))}
+                </ul>
+
+                {referencia && (
+                  <p className="mt-3">
+                    Distância de referência: <strong>{referencia} pixels</strong> (1 metro)
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
-      )}
-
-      {referencia && (
-        <p style={{ marginTop: "10px" }}>
-          Distância de referência: <strong>{referencia} pixels</strong> (1 metro)
-        </p>
-      )}
-
-      {distancias.length > 0 && (
-        <div style={{ marginTop: "20px" }}>
-          <h4>Distâncias calculadas (cm):</h4>
-          <ul>
-            {distancias.map((d, i) => (
-              <li key={i}>
-                {d.ponto1} ↔ {d.ponto2}: <strong>{d.distancia_cm} cm</strong>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 };
 
