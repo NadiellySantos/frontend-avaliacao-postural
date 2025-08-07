@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import InputMask from "react-input-mask";
 import { IMaskInput } from 'react-imask';
+import './cadastroMedico.css'; // <- CSS exclusivo desta página
+import { Helmet } from "react-helmet";
+import Header from "./header.js";
+import Footer from "./footer.js";
 
 const CadastroMedico = () => {
   const navigate = useNavigate();
@@ -42,15 +45,10 @@ const CadastroMedico = () => {
         telefone: limparTelefone(medico.telefone)
       };
 
-      const response = await axios.post(
-        "http://localhost:5000/cadastrar-medico",
-        medicoParaEnvio,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await axios.post("http://localhost:5000/cadastrar-medico", medicoParaEnvio, {
+        headers: { "Content-Type": "application/json" },
+      });
+
       setMensagem("Médico cadastrado com sucesso!");
       setMedico({
         cpf: "",
@@ -64,7 +62,6 @@ const CadastroMedico = () => {
         senha: ""
       });
     } catch (error) {
-      console.error("Erro ao cadastrar médico:", error.response?.data || error.message);
       setMensagem(error.response?.data?.detail || "Erro ao cadastrar médico.");
     }
   };
@@ -74,95 +71,136 @@ const CadastroMedico = () => {
   };
 
   return (
-    <div className="container">
-      <h2>Cadastro de Médico</h2>
+    <>
+      <Helmet>
+        <title>Pacientes - AlignMe</title>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+        />
+        <link
+          rel="stylesheet"
+          href="/assets/css/main.css"
+        />
+        <link
+          rel="stylesheet"
+          href="/CadastroPacientes.css"
+        />
+      </Helmet>
+      <div className="container-fluid cadastro-medico-container min-vh-100">
 
-      <button onClick={handleVoltar} type="button">
-        Voltar
-      </button>
+        
+          <Header />
+          
+                  <div
+                    className="page-title text-center text-dark"
+                    style={{
+                      backgroundImage: `linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('/img/medititle.jpg')`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      padding: "40px 0",
+                    }}
+                  >
+                    <h2 className="fw-bold">Cadastro de Médicos</h2>
+                  </div>
+          
+          <div className="container my-5">
+            
+            <form onSubmit={handleSubmit}>
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label>CPF:</label>
+                  <IMaskInput
+                    mask="000.000.000-00"
+                    name="cpf"
+                    value={medico.cpf}
+                    onAccept={(value) => handleChange({target: {name: 'cpf', value}})}
+                    required
+                    className="form-control"
+                  />
+                </div>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>CPF:</label>
-          <IMaskInput
-            mask="000.000.000-00"
-            name="cpf"
-            value={medico.cpf}
-            onAccept={(value) => handleChange({target: {name: 'cpf', value}})}
-            required
-            className="form-input"
-          />
+                <div className="col-md-6 mb-3">
+                  <label>Nome:</label>
+                  <input type="text" name="nome" value={medico.nome} onChange={handleChange} required className="form-control" />
+                </div>
+
+                <div className="col-md-6 mb-3">
+                  <label>Data de Nascimento:</label>
+                  <input type="date" name="data_nascimento" value={medico.data_nascimento} onChange={handleChange} required className="form-control" />
+                </div>
+
+                <div className="col-md-6 mb-3">
+                  <label>Sexo:</label>
+                  <select name="sexo" value={medico.sexo} onChange={handleChange} className="form-select">
+                    <option value="">Selecione</option>
+                    <option value="Feminino">Feminino</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Outro">Outro</option>
+                  </select>
+                </div>
+
+                <div className="col-md-6 mb-3">
+                  <label>Especialidade:</label>
+                  <input type="text" name="especialidade" value={medico.especialidade} onChange={handleChange} className="form-control" />
+                </div>
+
+                <div className="col-md-6 mb-3">
+                  <label>Telefone:</label>
+                  <IMaskInput
+                    mask="(00) 00000-0000"
+                    name="telefone"
+                    value={medico.telefone}
+                    onAccept={(value) => handleChange({target: {name: 'telefone', value}})}
+                    required
+                    className="form-control"
+                  />
+                </div>
+
+                <div className="col-md-6 mb-3">
+                  <label>CRM:</label>
+                  <input type="text" name="crm" value={medico.crm} onChange={handleChange} className="form-control" />
+                </div>
+
+                <div className="col-md-6 mb-3">
+                  <label>Email:</label>
+                  <input type="email" name="email" value={medico.email} onChange={handleChange} required className="form-control" />
+                </div>
+
+                <div className="col-md-6 mb-3">
+                  <label>Senha:</label>
+                  <input
+                    type="password"
+                    name="senha"
+                    value={medico.senha}
+                    onChange={handleChange}
+                    required
+                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*#?&]).{8,}"
+                    title="Mínimo 8 caracteres, incluindo maiúscula, minúscula, número e caractere especial."
+                    className="form-control"
+                  />
+                </div>
+              </div>
+
+              <div className="d-flex justify-content-between mt-4">
+                <button type="button" onClick={handleVoltar} className="btn btn-secondary">Voltar</button>
+                <button type="submit" className="btn btn-primary">Salvar</button>
+              </div>
+
+              {mensagem && (
+                <p className={`mt-3 ${mensagem.includes("sucesso") ? "text-success" : "text-danger"}`}>
+                  {mensagem}
+                </p>
+              )}
+            </form>
+          </div>          
         </div>
-
-        <div>
-          <label>Nome:</label>
-          <input type="text" name="nome" value={medico.nome} onChange={handleChange} required />
-        </div>
-
-        <div>
-          <label>Data de Nascimento:</label>
-          <input type="date" name="data_nascimento" value={medico.data_nascimento} onChange={handleChange} required />
-        </div>
-
-        <div>
-          <label>Sexo:</label>
-          <select name="sexo" value={medico.sexo} onChange={handleChange}>
-            <option value="">Selecione</option>
-            <option value="Feminino">Feminino</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Outro">Outro</option>
-          </select>
-        </div>
-
-        <div>
-          <label>Especialidade:</label>
-          <input type="text" name="especialidade" value={medico.especialidade} onChange={handleChange} />
-        </div>
-
-        <div>
-          <label>Telefone:</label>
-          <IMaskInput
-            mask="(00) 00000-0000"
-            name="telefone"
-            value={medico.telefone}
-            onAccept={(value) => handleChange({target: {name: 'telefone', value}})}
-            required
-            className="form-input"
-          />
-        </div>
-
-        <div>
-          <label>CRM:</label>
-          <input type="text" name="crm" value={medico.crm} onChange={handleChange} />
-        </div>
-
-        <div>
-          <label>Email:</label>
-          <input type="email" name="email" value={medico.email} onChange={handleChange} required />
-        </div>
-
-        <div>
-          <label>Senha:</label>
-          <input
-            type="password"
-            name="senha"
-            value={medico.senha}
-            onChange={handleChange}
-            required
-            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*#?&]).{8,}"
-            title="A senha deve conter no mínimo 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial."
-          />
-        </div>
-
-        <button type="submit">Salvar</button>
-      </form>
-
-      {mensagem && (
-        <p className={mensagem.includes("sucesso") ? "message-success" : "message-error"}>
-          {mensagem}
-        </p>
-      )}
-    </div>
+      < Footer/>
+    </>
   );
 };
 
