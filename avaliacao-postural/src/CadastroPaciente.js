@@ -61,10 +61,19 @@ const CadastroPaciente = () => {
     }));
   };
 
+  const limparCPF = (cpf) => cpf.replace(/\D/g, "");
+  const limparTelefone = (telefone) => telefone.replace(/\D/g, "");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/cadastrar-paciente", paciente);
+      const pacienteParaEnvio = {
+        ...paciente,
+        cpf: limparCPF(paciente.cpf),
+        telefone: limparTelefone(paciente.telefone)
+      };
+
+      await axios.post("http://localhost:5000/cadastrar-paciente", pacienteParaEnvio);
       setMensagem("Paciente cadastrado com sucesso!");
       setPaciente({
         cpf: "",
