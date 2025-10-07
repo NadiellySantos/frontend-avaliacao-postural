@@ -9,7 +9,8 @@ import Login from "./Login";
 import CadastroAvaliacao from "./CadastroAvaliacao";
 import PesquisarHistoricoPaciente from "./PesquisaHistoricoPaciente";
 import Historico from "./historico";
-import App from "./App"; // seu componente de avaliação
+import App from "./App"; // seu componente de avaliação frontal
+import Sagital from "./Sagital";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -23,6 +24,7 @@ root.render(
       <Route path="/cadastro" element={<CadastroPaciente />} />
       <Route path="/cadastroMedico" element={<CadastroMedico />} />
       <Route path="/avaliar/:id" element={<App />} />
+      <Route path="/sagital/:id" element={<Sagital />} />
       <Route path="/login" element={<Login />} />
       <Route path="/cadastrar-avaliacao" element={<CadastroAvaliacao />} />
       <Route path="/listar-avaliacao" element={<PesquisarHistoricoPaciente />} />

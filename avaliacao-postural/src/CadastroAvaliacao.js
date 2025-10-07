@@ -1,122 +1,279 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import "./cadastroAvaliacao.css";
+import Header from "./header.js";
+import Footer from "./footer.js";
+import { Helmet } from "react-helmet";
 
 const CadastroAvaliacao = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    const [formData, setFormData] = useState({
-        id_foto: "",
-        cpf: "",
-        altura: "",
-        resultado_avaliacao: "",
-        data_avaliacao: ""
-    });
+  const pacienteId = location.state?.paciente_id;
+  const frontal = location.state?.frontal;
+  const sagital = location.state?.sagital;
 
-    const [mensagem, setMensagem] = useState("");
+  const [formData, setFormData] = useState({
+    id_paciente: "",
+    foto_frontal: "",
+    foto_sagital: "",
+    medidas_frontal: "",
+    medidas_sagital: "",
+    //cpf: "",
+    altura: "",
+    resultado_avaliacao: "",
+    data_avaliacao: new Date().toISOString().split('T')[0],
+  });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
+  const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  useEffect(() => {
+    if (pacienteId) {
+      setFormData((prev) => ({
+        ...prev,
+        id_paciente: pacienteId,
+      }));
+    }
 
-        try {
-            const response = await axios.post(
-                "http://127.0.0.1:8000/avaliacao-medica",
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            setMensagem("Avaliação cadastrada com sucesso!");
-            console.log(response.data);
-            navigate("/index");
-        } catch (error) {
-            console.error("Erro ao cadastrar avaliação:", error.response?.data || error.message);
-            setMensagem("Erro ao cadastrar avaliação. Verifique os dados.");
+    if (frontal && sagital) {
+      setFormData((prev) => ({
+        ...prev,
+        foto_frontal: frontal.processedImageUrl || frontal.imagem || "",
+        foto_sagital: sagital.imagem || sagital.processedImageUrl || "",
+        medidas_frontal: JSON.stringify(frontal.distancias || []),
+        medidas_sagital: JSON.stringify(sagital.distancias || []),
+      }));
+    }
+  }, [pacienteId, frontal, sagital]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const dadosEnvio = {
+        id_paciente: formData.id_paciente,
+        foto_frontal: formData.foto_frontal,
+        foto_sagital: formData.foto_sagital,
+        medidas_frontal: formData.medidas_frontal,
+        medidas_sagital: formData.medidas_sagital,
+        //cpf: formData.cpf,
+        altura: formData.altura ? parseInt(formData.altura) : null,
+        resultado_avaliacao: formData.resultado_avaliacao,
+        data_avaliacao: formData.data_avaliacao,
+      };
+
+      console.log("Enviando dados:", dadosEnvio);
+
+      const response = await axios.post(
+        "http://localhost:8000/avaliacao-medica", 
+        dadosEnvio, 
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-    };
+      );
+      
+      alert("Avaliação cadastrada com sucesso!");
+      navigate("/index");
+    } catch (error) {
+      console.error("Erro ao cadastrar avaliação:", error);
+      alert("Erro ao cadastrar avaliação. Verifique os dados e o console para mais informações.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const handleVoltar = () => {
-        navigate("/");
-    };
+  const handleBack = () => {
+    navigate(-1);
+  };
 
-    return (
-        <div className="avaliacao-container">
-            <h2>Cadastro de Avaliação Médica</h2>
+  return (
+    <>
+      <Helmet>
+        <title>Cadastro de Avaliação - AlignMe</title>
+      </Helmet>
 
-            <button onClick={handleVoltar} type="button">
-                Voltar
-            </button>
+      <div className="d-flex flex-column min-vh-100">
+        <Header />
 
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="id_foto">ID da Foto:</label>
-                    <input
-                        type="number"
-                        id="id_foto"
-                        name="id_foto"
-                        value={formData.id_foto}
-                        onChange={handleChange}
-                        required
-                    />
+        <main className="flex-grow-1">
+          <div className="cadastro-avaliacao-container">
+            <div className="card-avaliacao">
+              <div className="card-header-avaliacao">
+                <h2>Cadastro de Avaliação Médica</h2>
+              </div>
+
+              <div className="card-body-avaliacao">
+                {/* ✅ NOVO LAYOUT: IMAGENS LADO A LADO COM MEDIDAS ABAIXO */}
+                <div className="container-imagens-medidas">
+                  {/* Coluna Frontal */}
+                  <div className="coluna-imagem-medidas">
+                    <div className="container-imagem">
+                      <h5>Imagem Frontal Processada</h5>
+                      {formData.foto_frontal ? (
+                        <img 
+                          src={formData.foto_frontal} 
+                          alt="Frontal processada" 
+                          className="imagem-avaliacao"
+                        />
+                      ) : (
+                        <p className="texto-ajuda-avaliacao">Nenhuma imagem disponível</p>
+                      )}
+                    </div>
+                    
+                    <div className="container-medidas">
+                      <h5>Medidas Frontal</h5>
+                      {frontal?.distancias ? (
+                        <ul className="lista-medidas">
+                          {frontal.distancias.map((medida, index) => (
+                            <li key={index} className="item-medida">
+                              <small>
+                                {medida.ponto1} ↔ {medida.ponto2}: 
+                                <strong> {medida.distancia_cm} cm</strong>
+                              </small>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="texto-ajuda-avaliacao">Nenhuma medida disponível</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Coluna Sagital */}
+                  <div className="coluna-imagem-medidas">
+                    <div className="container-imagem">
+                      <h5>Imagem Sagital Processada</h5>
+                      {formData.foto_sagital ? (
+                        <img 
+                          src={formData.foto_sagital} 
+                          alt="Sagital processada" 
+                          className="imagem-avaliacao"
+                        />
+                      ) : (
+                        <p className="texto-ajuda-avaliacao">Nenhuma imagem disponível</p>
+                      )}
+                    </div>
+                    
+                    <div className="container-medidas">
+                      <h5>Medidas Sagital</h5>
+                      {sagital?.distancias ? (
+                        <ul className="lista-medidas">
+                          {sagital.distancias.map((medida, index) => (
+                            <li key={index} className="item-medida">
+                              <small>
+                                {medida.ponto1} ↔ {medida.ponto2}: 
+                                <strong> {medida.distancia_cm} cm</strong>
+                              </small>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="texto-ajuda-avaliacao">Nenhuma medida disponível</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                    <label htmlFor="cpf">CPF:</label>
-                    <input
-                        type="text"
-                        id="cpf"
-                        name="cpf"
-                        value={formData.cpf}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="altura">Altura (cm):</label>
-                    <input
-                        type="number"
-                        step="0.01"
-                        id="altura"
-                        name="altura"
-                        value={formData.altura}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="resultado_avaliacao">Resultado da Avaliação:</label>
-                    <textarea
-                        id="resultado_avaliacao"
-                        name="resultado_avaliacao"
-                        value={formData.resultado_avaliacao}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="data_avaliacao">Data da Avaliação:</label>
-                    <input
-                        type="date"
-                        id="data_avaliacao"
+
+                {/* ✅ FORMULÁRIO COM CAMPOS DISTRIBUÍDOS PROPORCIONALMENTE */}
+                <form onSubmit={handleSubmit} className="form-avaliacao">
+                  {/* Primeira linha - ID Paciente e Data */}
+                  <div className="linha-formulario">
+                    <div className="campo-formulario">
+                      <label>ID do Paciente:</label>
+                      <input 
+                        type="text" 
+                        value={formData.id_paciente} 
+                        readOnly 
+                      />
+                    </div>
+
+                    <div className="campo-formulario">
+                      <label>Data da Avaliação:</label>
+                      <input 
+                        type="date" 
                         name="data_avaliacao"
-                        value={formData.data_avaliacao}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <button type="submit">Cadastrar</button>
-            </form>
+                        value={formData.data_avaliacao} 
+                        onChange={handleChange} 
+                        required 
+                      />
+                    </div>
+                  </div>
 
-            {mensagem && <p>{mensagem}</p>}
-        </div>
-    );
+                  {/* Segunda linha - CPF e Altura */}
+                  <div className="linha-formulario">
+
+                    <div className="campo-formulario">
+                      <label>Altura (cm):</label>
+                      <input 
+                        type="number" 
+                        name="altura"
+                        value={formData.altura} 
+                        onChange={handleChange} 
+                        placeholder="175"
+                        min="100"
+                        max="250"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Terceira linha - Resultado (ocupa linha inteira) */}
+                  <div className="linha-formulario">
+                    <div className="campo-formulario campo-texto-grande">
+                      <label>Resultado da Avaliação:</label>
+                      <textarea 
+                        name="resultado_avaliacao"
+                        value={formData.resultado_avaliacao} 
+                        onChange={handleChange} 
+                        placeholder="Descreva os resultados da avaliação postural..."
+                      />
+                    </div>
+                  </div>
+
+                  {/* Campos ocultos */}
+                  <input type="hidden" name="foto_frontal" value={formData.foto_frontal} />
+                  <input type="hidden" name="foto_sagital" value={formData.foto_sagital} />
+                  <input type="hidden" name="medidas_frontal" value={formData.medidas_frontal} />
+                  <input type="hidden" name="medidas_sagital" value={formData.medidas_sagital} />
+
+                  {/* Botões */}
+                  <div className="botoes-avaliacao">
+                    <button 
+                      type="button" 
+                      className="btn-voltar-avaliacao"
+                      onClick={handleBack}
+                    >
+                      Voltar
+                    </button>
+                    <button 
+                      type="submit" 
+                      className="btn-submit-avaliacao"
+                      disabled={loading}
+                    >
+                      {loading ? "Cadastrando..." : "Cadastrar Avaliação"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <Footer />
+      </div>
+    </>
+  );
 };
 
 export default CadastroAvaliacao;

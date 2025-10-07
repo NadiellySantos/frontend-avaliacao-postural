@@ -1,0 +1,331 @@
+/* CadastroAvaliacao.css - Layout proporcional para imagens e medidas */
+
+/* Container principal */
+.cadastro-avaliacao-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  flex: 1;
+}
+
+/* Card principal */
+.card-avaliacao {
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: #ffffffcc;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(4px);
+  border: none;
+}
+
+/* Header do card */
+.card-header-avaliacao {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 12px 12px 0 0 !important;
+  border: none;
+}
+
+.card-header-avaliacao h2 {
+  text-align: center;
+  margin-bottom: 0;
+  color: white;
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+/* Body do card */
+.card-body-avaliacao {
+  padding: 30px;
+}
+
+/* Layout para imagens e medidas - UMA AO LADO DA OUTRA */
+.container-imagens-medidas {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 30px;
+  align-items: stretch;
+}
+
+/* Coluna para cada imagem com suas medidas */
+.coluna-imagem-medidas {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Container da imagem */
+.container-imagem {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+}
+
+.container-imagem h5 {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 8px;
+}
+
+.imagem-avaliacao {
+  max-width: 100%;
+  height: auto;
+  max-height: 300px;
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Container das medidas */
+.container-medidas {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 20px;
+  flex: 1;
+}
+
+.container-medidas h5 {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 8px;
+}
+
+.lista-medidas {
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.item-medida {
+  padding: 8px 12px;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 0.9rem;
+}
+
+.item-medida:last-child {
+  border-bottom: none;
+}
+
+.item-medida small {
+  color: #495057;
+}
+
+/* Formulário - CAMPOS DISTRIBUÍDOS ABAIXO */
+.form-avaliacao {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.linha-formulario {
+  display: flex;
+  gap: 20px;
+}
+
+.campo-formulario {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.campo-formulario label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #2c3e50;
+}
+
+.campo-formulario input,
+.campo-formulario select,
+.campo-formulario textarea {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+}
+
+.campo-formulario input:focus,
+.campo-formulario select:focus,
+.campo-formulario textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+.campo-formulario input[readonly] {
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+}
+
+/* Campo de texto grande (textarea) ocupa linha inteira */
+.campo-texto-grande {
+  flex: 1 1 100%;
+}
+
+.campo-texto-grande textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Botões */
+.botoes-avaliacao {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  gap: 15px;
+}
+
+.btn-voltar-avaliacao {
+  background-color: transparent;
+  color: #007bff;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  max-width: 200px;
+}
+
+.btn-voltar-avaliacao:hover {
+  background-color: #007bff;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.btn-submit-avaliacao {
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.2);
+  flex: 1;
+  max-width: 200px;
+}
+
+.btn-submit-avaliacao:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.btn-submit-avaliacao:disabled {
+  background-color: #9fb6f7;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.7;
+  transform: none;
+}
+
+/* Mensagens */
+.mensagem-sucesso-avaliacao {
+  color: green;
+  text-align: center;
+  margin-top: 20px;
+  padding: 15px;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.mensagem-erro-avaliacao {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+  padding: 15px;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* Texto de ajuda */
+.texto-ajuda-avaliacao {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .cadastro-avaliacao-container {
+    padding: 15px;
+  }
+  
+  .card-avaliacao {
+    padding: 20px 15px;
+  }
+  
+  .card-body-avaliacao {
+    padding: 20px 15px;
+  }
+  
+  .container-imagens-medidas {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .linha-formulario {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .botoes-avaliacao {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn-voltar-avaliacao,
+  .btn-submit-avaliacao {
+    width: 100%;
+    max-width: none;
+  }
+  
+  .imagem-avaliacao {
+    max-height: 250px;
+  }
+}
+
+/* Loading state */
+.loading-avaliacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.spinner-avaliacao {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin-avaliacao 1s linear infinite;
+}
+
+@keyframes spin-avaliacao {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

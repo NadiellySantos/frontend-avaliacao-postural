@@ -1,7 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import "./App.css";
+import "./App.css"; // ✅ MUDOU AQUI
 import Header from "./header.js";
 import Footer from "./footer.js";
 import { Helmet } from "react-helmet";
@@ -16,16 +16,37 @@ const App = () => {
   const [clicks, setClicks] = useState([]);
   const [referencia, setReferencia] = useState(null);
   const [distancias, setDistancias] = useState([]);
+  const [idFoto, setIdFoto] = useState(null);
+  const [loading, setLoading] = useState(false);
   const imageRef = useRef(null);
+  const previousObjectUrl = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (previousObjectUrl.current) {
+        URL.revokeObjectURL(previousObjectUrl.current);
+      }
+    };
+  }, []);
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (previousObjectUrl.current) {
+      URL.revokeObjectURL(previousObjectUrl.current);
+    }
+
+    const objUrl = URL.createObjectURL(file);
+    previousObjectUrl.current = objUrl;
+
     setImageFile(file);
-    setImageUrl(URL.createObjectURL(file));
+    setImageUrl(objUrl);
     setProcessedImageUrl(null);
     setClicks([]);
     setReferencia(null);
     setDistancias([]);
+    setIdFoto(null);
   };
 
   const handleDoubleClick = (event) => {
@@ -39,7 +60,7 @@ const App = () => {
       const dx = novoClick[1].x - novoClick[0].x;
       const dy = novoClick[1].y - novoClick[0].y;
       const distanciaPixels = Math.sqrt(dx * dx + dy * dy);
-      setReferencia(distanciaPixels.toFixed(2));
+      setReferencia(Number(distanciaPixels.toFixed(2)));
       setClicks([]);
 
       if (imageFile) {
@@ -51,17 +72,34 @@ const App = () => {
   };
 
   const sendImageToBackend = async (file, referenciaPixels) => {
+    setLoading(true);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("referencia_pixels", referenciaPixels);
 
     try {
-      const response = await axios.post("http://localhost:5000/process-image", formData);
-      const { image, distancias } = response.data;
-      setProcessedImageUrl(`data:image/jpeg;base64,${image}`);
-      setDistancias(distancias);
+      const response = await axios.post("http://localhost:5000/process-image", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 60000,
+      });
+
+      console.log("Resposta do backend:", response.data);
+
+      const resp = response.data || {};
+      const returnedImage = resp.image || resp.imagem || resp.img || null;
+      const returnedDistancias = resp.distancias || resp.distances || resp.medicoes || [];
+      const returnedIdFoto = resp.id_foto ?? resp.idFoto ?? resp.id ?? null;
+
+      if (returnedImage) {
+        setProcessedImageUrl(`data:image/jpeg;base64,${returnedImage}`);
+      }
+      setDistancias(returnedDistancias);
+      setIdFoto(returnedIdFoto);
     } catch (err) {
       console.error("Erro ao enviar imagem:", err);
+      alert("Erro ao processar imagem. Verifique o backend e o console.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,94 +107,95 @@ const App = () => {
     <>
       <Helmet>
         <title>Pacientes - AlignMe</title>
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        />
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-        />
-        <link
-          rel="stylesheet"
-          href="/assets/css/main.css"
-        />
-        <link
-          rel="stylesheet"
-          href="/pacientes.css"
-        />
       </Helmet>
-      <div className="d-flex flex-column py-4 min-vh-100">
-        <Header />
-        <div
-          className="page-title text-center text-dark"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('/img/medititle.jpg')`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            padding: "40px 0",
-          }}
-        >
-          <h2 className="fw-bold">Avaliação Postural</h2>
-        </div>
 
-        {/* <div className="mb-3">
-          <button onClick={() => navigate("/")} className="btn btn-primary me-2">
-            Voltar para Pacientes
-          </button>
-          <button onClick={() => navigate("/cadastro")} className="btn btn-success me-2">
-            Cadastrar Paciente
-          </button>
-          <button onClick={() => navigate("/cadastroMedico")} className="btn btn-success">
-            Cadastrar Médico
-          </button>
-        </div> */}
-        <div className="container my-5">
-          <input type="file" accept="image/*" onChange={handleFileChange} className="form-control mb-4" />
+      {/* ✅ MUDANÇAS NAS CLASSES AQUI */}
+      <div className="d-flex flex-column py-4 min-vh-100 avaliacao-frontal-root">
+        <Header />
+
+        <div className="avaliacao-frontal-container">
+          <h2 className="titulo-frontal-principal">Avaliação Postural - Frontal</h2>
+
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="form-control input-file-frontal"
+          />
 
           {imageUrl && !processedImageUrl && (
-            <div className="container-avaliacao">
-              <div className="imagem-box">
-                <h4>Imagem Original (clique duas vezes para marcar 1 metro):</h4>
-                <img
-                  ref={imageRef}
-                  src={imageUrl}
-                  alt="Selecionada"
-                  onDoubleClick={handleDoubleClick}
-                  style={{ cursor: "crosshair" }}
-                />
-              </div>
+            <div className="imagem-box-frontal">
+              <h4 className="titulo-frontal-secundario">Imagem Original (clique duas vezes na régua: 1 metro)</h4>
+              <img
+                ref={imageRef}
+                src={imageUrl}
+                alt="Selecionada"
+                onDoubleClick={handleDoubleClick}
+                className="imagem-frontal-selecionada"
+              />
+              {clicks.length > 0 && (
+                <span className="badge-cliques-frontal">Cliques: {clicks.length}/2</span>
+              )}
+              {referencia !== null && (
+                <p className="texto-referencia-frontal">Referência (pixels): <strong>{referencia}</strong></p>
+              )}
             </div>
+          )}
+
+          {loading && (
+            <div className="spinner-frontal"></div>
           )}
 
           {processedImageUrl && (
-            <div className="container-avaliacao">
-              <div className="imagem-box">
-                <h4>Imagem Processada:</h4>
-                <img src={processedImageUrl} alt="Processada" />
+            <div className="container-avaliacao-frontal">
+              <div className="imagem-box-frontal">
+                <h4 className="titulo-frontal-secundario">Imagem Processada (Frontal)</h4>
+                <img src={processedImageUrl} alt="Processada" className="imagem-frontal-processada" />
               </div>
 
-              <div className="medicoes-box">
-                <h4>Distâncias calculadas (cm):</h4>
-                <ul className="list-group">
-                  {distancias.map((d, i) => (
-                    <li key={i} className="list-group-item">
-                      {d.ponto1} ↔ {d.ponto2}: <strong>{d.distancia_cm} cm</strong>
-                    </li>
-                  ))}
+              <div className="medicoes-box-frontal">
+                <h4 className="titulo-frontal-secundario">Distâncias calculadas (cm)</h4>
+                <ul className="lista-medicoes-frontal">
+                  {distancias && distancias.length > 0 ? (
+                    distancias.map((d, i) => (
+                      <li key={i} className="item-medicao-frontal">
+                        {d.ponto1} ↔ {d.ponto2}: <strong>{d.distancia_cm} cm</strong>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="item-medicao-frontal">Nenhuma distância calculada.</li>
+                  )}
                 </ul>
-
-                {referencia && (
-                  <p className="mt-3">
-                    Distância de referência: <strong>{referencia} pixels</strong> (1 metro)
-                  </p>
-                )}
               </div>
             </div>
           )}
+
+          <div className="text-center mt-4">
+            <button
+              className="avaliacao-frontal-continue-btn"
+              disabled={loading || processedImageUrl == null}
+              onClick={() =>
+                navigate(`/sagital/${id}`, {
+                  state: {
+                    paciente_id: id,
+                    frontal: {
+                      processedImageUrl,
+                      distancias,
+                    },
+                  },
+                })
+              }
+            >
+              {loading ? "Processando..." : "Continuar para Sagital"}
+            </button>
+            <div className="texto-ajuda-frontal">
+              {processedImageUrl == null && !loading && <span>O botão será habilitado quando o processamento terminar.</span>}
+            </div>
+          </div>
         </div>
+
+        <Footer />
       </div>
-      <Footer />
     </>
   );
 };
