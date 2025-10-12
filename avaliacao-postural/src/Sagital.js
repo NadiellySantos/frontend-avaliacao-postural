@@ -97,90 +97,99 @@ const Sagital = () => {
         <>
             <Helmet>
                 <title>Avaliação Sagital - AlignMe</title>
+                <link
+                rel="stylesheet"
+                href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+                />
+                <link
+                rel="stylesheet"
+                href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+                />
+                <link
+                rel="stylesheet"
+                href="/assets/css/main.css"
+                />
+                <link
+                rel="stylesheet"
+                href="/Sagital.css"
+                />
             </Helmet>
 
-            <div className="d-flex flex-column min-vh-100">
+            <div className="d-flex flex-column min-vh-100 avaliacao-frontal-root">
                 <Header />
 
-                <main className="flex-grow-1">
+                <div className="avaliacao-sagital-container"> 
                     <div className="page-title-frontal text-center">
-                        <h2 className="titulo-sagital-principal">Avaliação Postural - Sagital</h2>
+                    <h2 className="titulo-sagital-principal">Avaliação Postural - Sagital</h2>
                     </div>
-
-                    <div className="avaliacao-sagital-container">
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                            className="form-control input-file-sagital"
-                        />
-
-                        {imageUrl && !processedImageUrl && (
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="form-control input-file-sagital"
+                    />
+                    {imageUrl && !processedImageUrl && (
+                        <div className="imagem-box-sagital">
+                            <h4 className="titulo-sagital-secundario">
+                                Imagem Original 
+                                {clicks.length > 0 && (
+                                    <span className="badge-cliques-sagital">Cliques: {clicks.length}/2</span>
+                                )}
+                            </h4>
+                            <p className="texto-ajuda-sagital">Clique duas vezes na régua: início e fim de 1 metro</p>
+                            <img
+                                ref={imageRef}
+                                src={imageUrl}
+                                alt="Imagem sagital selecionada"
+                                onDoubleClick={handleDoubleClick}
+                                className="imagem-sagital-selecionada"
+                            />
+                        </div>
+                    )}
+                    {loading && (
+                        <div className="spinner-sagital"></div>
+                    )}
+                    {processedImageUrl && (
+                        <div className="container-avaliacao-sagital">
                             <div className="imagem-box-sagital">
-                                <h4 className="titulo-sagital-secundario">
-                                    Imagem Original 
-                                    {clicks.length > 0 && (
-                                        <span className="badge-cliques-sagital">Cliques: {clicks.length}/2</span>
-                                    )}
-                                </h4>
-                                <p className="texto-ajuda-sagital">Clique duas vezes na régua: início e fim de 1 metro</p>
-                                <img
-                                    ref={imageRef}
-                                    src={imageUrl}
-                                    alt="Imagem sagital selecionada"
-                                    onDoubleClick={handleDoubleClick}
-                                    className="imagem-sagital-selecionada"
+                                <h4 className="titulo-sagital-secundario">Imagem Processada (Sagital)</h4>
+                                <img 
+                                    src={processedImageUrl} 
+                                    alt="Imagem sagital processada" 
+                                    className="imagem-sagital-processada" 
                                 />
                             </div>
-                        )}
-
-                        {loading && (
-                            <div className="spinner-sagital"></div>
-                        )}
-
-                        {processedImageUrl && (
-                            <div className="container-avaliacao-sagital">
-                                <div className="imagem-box-sagital">
-                                    <h4 className="titulo-sagital-secundario">Imagem Processada (Sagital)</h4>
-                                    <img 
-                                        src={processedImageUrl} 
-                                        alt="Imagem sagital processada" 
-                                        className="imagem-sagital-processada" 
-                                    />
-                                </div>
-
-                                <div className="medicoes-box-sagital">
-                                    <h4 className="titulo-sagital-secundario">Distâncias calculadas (cm)</h4>
-                                    <ul className="lista-medicoes-sagital">
-                                        {distancias && distancias.length > 0 ? (
-                                            distancias.map((d, i) => (
-                                                <li key={i} className="item-medicao-sagital">
-                                                    {d.ponto1} ↔ {d.ponto2}: <strong>{d.distancia_cm} cm</strong>
-                                                </li>
-                                            ))
-                                        ) : (
-                                            <li className="item-medicao-sagital">Nenhuma distância calculada.</li>
-                                        )}
-                                    </ul>
-                                </div>
+                            <div className="medicoes-box-sagital">
+                                <h4 className="titulo-sagital-secundario">Distâncias calculadas (cm)</h4>
+                                <ul className="lista-medicoes-sagital">
+                                    {distancias && distancias.length > 0 ? (
+                                        distancias.map((d, i) => (
+                                            <li key={i} className="item-medicao-sagital">
+                                                {d.ponto1} ↔ {d.ponto2}: <strong>{d.distancia_cm} cm</strong>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <li className="item-medicao-sagital">Nenhuma distância calculada.</li>
+                                    )}
+                                </ul>
                             </div>
-                        )}
-
-                        <button
-                            className="avaliacao-sagital-continue-btn"
-                            disabled={loading || !processedImageUrl}
-                            onClick={handleContinue}
-                        >
-                            {loading ? "Processando..." : "Continuar para Cadastro de Avaliação"}
-                        </button>
-                        
-                        <div className="texto-ajuda-sagital">
-                            {!processedImageUrl && !loading && (
-                                <span>O botão será habilitado quando o processamento terminar.</span>
-                            )}
                         </div>
+                    )}
+                    <button
+                        className="avaliacao-sagital-continue-btn"
+                        disabled={loading || !processedImageUrl}
+                        onClick={handleContinue}
+                    >
+                        {loading ? "Processando..." : "Continuar para Cadastro de Avaliação"}
+                    </button>
+                    
+                    <div className="texto-ajuda-sagital">
+                        {!processedImageUrl && !loading && (
+                            <span>O botão será habilitado quando o processamento terminar.</span>
+                        )}
                     </div>
-                </main>
+                    
+                </div>
 
                 <Footer />
             </div>

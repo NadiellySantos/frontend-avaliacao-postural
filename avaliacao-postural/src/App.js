@@ -107,10 +107,26 @@ const App = () => {
     <>
       <Helmet>
         <title>Pacientes - AlignMe</title>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+        />
+        <link
+          rel="stylesheet"
+          href="/assets/css/main.css"
+        />
+        <link
+          rel="stylesheet"
+          href="/App.css"
+        />
       </Helmet>
 
       {/* ✅ MUDANÇAS NAS CLASSES AQUI */}
-      <div className="d-flex flex-column py-4 min-vh-100 avaliacao-frontal-root">
+      <div className="d-flex flex-column min-vh-100 avaliacao-frontal-root">
         <Header />
 
         <div className="avaliacao-frontal-container">
