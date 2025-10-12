@@ -18,6 +18,7 @@ const Sagital = () => {
     const [processedImageUrl, setProcessedImageUrl] = useState(null);
     const [clicks, setClicks] = useState([]);
     const [distancias, setDistancias] = useState([]);
+    const [angulos, setAngulos] = useState([]);
     const [loading, setLoading] = useState(false);
     const imageRef = useRef(null);
 
@@ -28,6 +29,7 @@ const Sagital = () => {
         setProcessedImageUrl(null);
         setClicks([]);
         setDistancias([]);
+        setAngulos([]);
     };
 
     const handleDoubleClick = (event) => {
@@ -67,11 +69,12 @@ const Sagital = () => {
                     timeout: 60000,
                 }
             );
-            const { image, distancias } = response.data;
+            const { image, distancias, angulos } = response.data;
 
             const processedImageBase64 = `data:image/jpeg;base64,${image}`;
             setProcessedImageUrl(processedImageBase64);
             setDistancias(distancias);
+            setAngulos(angulos);
         } catch (err) {
             console.error("Erro ao enviar imagem:", err);
             alert("Erro ao processar imagem sagital");
@@ -88,6 +91,7 @@ const Sagital = () => {
                 sagital: {
                     imagem: processedImageUrl,
                     distancias: distancias,
+                    angulos: angulos
                 },
             },
         });
@@ -173,6 +177,21 @@ const Sagital = () => {
                                     )}
                                 </ul>
                             </div>
+                            <div className="medicoes-box-sagital">
+                                <h4 className="titulo-sagital-secundario">Ângulos calculados (°)</h4>
+                                <ul className="lista-medicoes-sagital">
+                                    {angulos && angulos.length > 0 ? (
+                                        angulos.map((a, i) => (
+                                            <li key={i} className="item-medicao-sagital">
+                                                {a.nome}: <strong>{a.angulo_graus}°</strong>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <li className="item-medicao-sagital">Nenhum ângulo calculado.</li>
+                                    )}
+                                </ul>
+                            </div>
+
                         </div>
                     )}
                     <button
