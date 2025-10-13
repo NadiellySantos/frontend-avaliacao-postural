@@ -49,6 +49,10 @@ const Login = () => {
     navigate("/cadastroMedico");
   };
 
+  const irParaSobre = () => {
+    navigate("/sobre");
+  };
+
   return (
     <>
       <Helmet>
@@ -64,6 +68,11 @@ const Login = () => {
       </Helmet>
 
       <div className="login-wrapper">
+        <div>
+          <button className="botao-sobre" onClick={irParaSobre}>
+            Sobre o Sistema
+          </button>
+        </div>
         <div className="login-card">
           <h3 className="login-title">
             <i className="bi bi-person-circle"></i> Login
