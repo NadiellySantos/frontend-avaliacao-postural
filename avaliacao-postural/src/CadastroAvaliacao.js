@@ -75,7 +75,7 @@ const CadastroAvaliacao = () => {
       console.log("Enviando dados:", dadosEnvio);
 
       const response = await axios.post(
-        "http://localhost:8000/avaliacao-medica", 
+        "http://localhost:5000/cadastrar-avaliacao", 
         dadosEnvio, 
         {
           headers: {
@@ -85,7 +85,7 @@ const CadastroAvaliacao = () => {
       );
       
       alert("Avaliação cadastrada com sucesso!");
-      navigate("/index");
+      navigate("/historico", { state: { paciente_id: formData.id_paciente } });
     } catch (error) {
       console.error("Erro ao cadastrar avaliação:", error);
       alert("Erro ao cadastrar avaliação. Verifique os dados e o console para mais informações.");
@@ -102,6 +102,22 @@ const CadastroAvaliacao = () => {
     <>
       <Helmet>
         <title>Cadastro de Avaliação - AlignMe</title>
+        <link
+                rel="stylesheet"
+                href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+                />
+                <link
+                rel="stylesheet"
+                href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+                />
+                <link
+                rel="stylesheet"
+                href="/assets/css/main.css"
+                />
+                 <link
+                  rel="stylesheet"
+                  href="/CadastroAvaliacao.css"
+                  />
       </Helmet>
 
       <div className="d-flex flex-column min-vh-100">
