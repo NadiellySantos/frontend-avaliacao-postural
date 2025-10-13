@@ -7,6 +7,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  flex-direction: column;
 }
 
 /* Cartão central de login */
@@ -46,5 +47,15 @@
   border-radius: 10px;
   font-size: 0.9rem;
   padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.botao-sobre {
+  background-color: transparent;
+  border: none;
+  color: #0d6efd;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
   margin-bottom: 1rem;
 }
