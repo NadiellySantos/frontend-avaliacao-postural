@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import "./App.css"; // ✅ MUDOU AQUI
+import "./App.css";
 import Header from "./header.js";
 import Footer from "./footer.js";
 import { Helmet } from "react-helmet";
@@ -21,6 +21,35 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const imageRef = useRef(null);
   const previousObjectUrl = useRef(null);
+
+  // 🔹 Zoom e Pan
+  const [scale, setScale] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+
+  const zoomIn = () => setScale((prev) => Math.min(prev + 0.2, 3));
+  const zoomOut = () => setScale((prev) => Math.max(prev - 0.2, 1));
+  const resetZoom = () => {
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const handleMouseDown = (e) => {
+    if (scale > 1) {
+      setIsDragging(true);
+      setStartPos({ x: e.clientX - position.x, y: e.clientY - position.y });
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      setPosition({ x: e.clientX - startPos.x, y: e.clientY - startPos.y });
+    }
+  };
+
+  const handleMouseUp = () => setIsDragging(false);
+  const handleMouseLeave = () => setIsDragging(false);
 
   useEffect(() => {
     return () => {
@@ -84,8 +113,6 @@ const App = () => {
         timeout: 60000,
       });
 
-      console.log("Resposta do backend:", response.data);
-
       const resp = response.data || {};
       const returnedImage = resp.image || resp.imagem || resp.img || null;
       const returnedDistancias = resp.distancias || resp.distances || resp.medicoes || [];
@@ -116,29 +143,21 @@ const App = () => {
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
         />
-        <link
-          rel="stylesheet"
-          href="/assets/css/main.css"
-        />
-        <link
-          rel="stylesheet"
-          href="/App.css"
-        />
+        <link rel="stylesheet" href="/assets/css/main.css" />
+        <link rel="stylesheet" href="/App.css" />
       </Helmet>
 
-      {/* ✅ MUDANÇAS NAS CLASSES AQUI */}
       <div className="d-flex flex-column min-vh-100 avaliacao-frontal-root">
         <Header />
 
         <div className="avaliacao-frontal-container">
           <h2 className="titulo-frontal-principal">Avaliação Postural - Frontal</h2>
-          
-          <div style={{ display: "flex", flexDirection: "column" , marginBottom: "20px" }}>
-            <p style={{ marginLeft: "20px" }}>
-              Imagem exemplo.
-            </p>
+
+          <div style={{ display: "flex", flexDirection: "column", marginBottom: "20px" }}>
+            <p style={{ marginLeft: "20px" }}>Imagem exemplo.</p>
             <img src={frontalImg} alt="Exemplo Frontal" className="imagem-exemplo-frontal" />
           </div>
+
           <input
             type="file"
             accept="image/*"
@@ -148,26 +167,59 @@ const App = () => {
 
           {imageUrl && !processedImageUrl && (
             <div className="imagem-box-frontal">
-              <h4 className="titulo-frontal-secundario">Imagem Original (clique duas vezes na régua: 1 metro)</h4>
-              <img
-                ref={imageRef}
-                src={imageUrl}
-                alt="Selecionada"
-                onDoubleClick={handleDoubleClick}
-                className="imagem-frontal-selecionada"
-              />
+              <h4 className="titulo-frontal-secundario">
+                Imagem Original (clique duas vezes na régua: 1 metro)
+              </h4>
+
+              {/* ✅ Contêiner com zoom e pan */}
+              <div className="zoom-container">
+                <div className="zoom-buttons">
+                  <button onClick={zoomIn}>+</button>
+                  <button onClick={zoomOut}>−</button>
+                  <button onClick={resetZoom}>⟳</button>
+                </div>
+
+                <div
+                  className="zoom-image-wrapper"
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseLeave}
+                  // 👇 Cursor fica seta normal e só vira "grabbing" enquanto arrasta
+                  style={{
+                    cursor: isDragging ? "grabbing" : "auto",
+                  }}
+                >
+                  <img
+                    ref={imageRef}
+                    src={imageUrl}
+                    alt="Selecionada"
+                    onDoubleClick={handleDoubleClick}
+                    className="imagem-frontal-selecionada"
+                    style={{
+                      transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+                      transition: isDragging ? "none" : "transform 0.3s ease",
+                      transformOrigin: "center center",
+                      userSelect: "none",
+                      pointerEvents: "auto",
+                    }}
+                    draggable="false"
+                  />
+                </div>
+              </div>
+
               {clicks.length > 0 && (
                 <span className="badge-cliques-frontal">Cliques: {clicks.length}/2</span>
               )}
               {referencia !== null && (
-                <p className="texto-referencia-frontal">Referência (pixels): <strong>{referencia}</strong></p>
+                <p className="texto-referencia-frontal">
+                  Referência (pixels): <strong>{referencia}</strong>
+                </p>
               )}
             </div>
           )}
 
-          {loading && (
-            <div className="spinner-frontal"></div>
-          )}
+          {loading && <div className="spinner-frontal"></div>}
 
           {processedImageUrl && (
             <div className="container-avaliacao-frontal">
@@ -211,8 +263,11 @@ const App = () => {
             >
               {loading ? "Processando..." : "Continuar para Sagital"}
             </button>
+
             <div className="texto-ajuda-frontal">
-              {processedImageUrl == null && !loading && <span>O botão será habilitado quando o processamento terminar.</span>}
+              {processedImageUrl == null && !loading && (
+                <span>O botão será habilitado quando o processamento terminar.</span>
+              )}
             </div>
           </div>
         </div>
