@@ -5,6 +5,7 @@ import "./Sagital.css";
 import Header from "./header.js";
 import Footer from "./footer.js";
 import { Helmet } from "react-helmet";
+import sagitalImg from "./img/sagital.jpg";
 
 const Sagital = () => {
     const navigate = useNavigate();
@@ -125,6 +126,12 @@ const Sagital = () => {
                 <div className="avaliacao-sagital-container"> 
                     <div className="page-title-frontal text-center">
                     <h2 className="titulo-sagital-principal">Avaliação Postural - Sagital</h2>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column" , marginBottom: "20px" }}>
+                        <p style={{ marginLeft: "20px" }}>
+                          Imagem exemplo.
+                        </p>
+                        <img src={sagitalImg} alt="Exemplo Sagital" className="imagem-exemplo-sagital" />
                     </div>
                     <input
                         type="file"

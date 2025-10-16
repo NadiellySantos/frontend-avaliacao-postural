@@ -5,6 +5,7 @@ import "./App.css"; // ✅ MUDOU AQUI
 import Header from "./header.js";
 import Footer from "./footer.js";
 import { Helmet } from "react-helmet";
+import frontalImg from "./img/frontal.jpg";
 
 const App = () => {
   const navigate = useNavigate();
@@ -131,7 +132,13 @@ const App = () => {
 
         <div className="avaliacao-frontal-container">
           <h2 className="titulo-frontal-principal">Avaliação Postural - Frontal</h2>
-
+          
+          <div style={{ display: "flex", flexDirection: "column" , marginBottom: "20px" }}>
+            <p style={{ marginLeft: "20px" }}>
+              Imagem exemplo.
+            </p>
+            <img src={frontalImg} alt="Exemplo Frontal" className="imagem-exemplo-frontal" />
+          </div>
           <input
             type="file"
             accept="image/*"
