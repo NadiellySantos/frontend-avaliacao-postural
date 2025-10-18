@@ -299,3 +299,11 @@
   margin-left: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
+
+.zoom-image-wrapper {
+  position: relative;
+  overflow: auto; /* permite rolagem quando a imagem é maior que o container */
+  max-width: 100%;
+  max-height: 80vh; /* ou outro valor adequado */
+  border: 1px solid #ccc;
+}

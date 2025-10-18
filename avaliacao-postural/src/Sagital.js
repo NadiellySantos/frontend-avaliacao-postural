@@ -22,7 +22,7 @@ const Sagital = () => {
   const [angulos, setAngulos] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // 🔹 Controle de zoom e pan
+  // 🔹 Zoom e pan
   const imageRef = useRef(null);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -53,6 +53,7 @@ const Sagital = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    if (!file) return;
     setImageFile(file);
     setImageUrl(URL.createObjectURL(file));
     setProcessedImageUrl(null);
@@ -61,12 +62,14 @@ const Sagital = () => {
     setAngulos([]);
   };
 
+  // ✅ Double click: coordenadas em pixels reais
   const handleDoubleClick = (event) => {
     if (!imageRef.current) return;
 
     const rect = imageRef.current.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
+
     const novoClick = [...clicks, { x, y }];
 
     if (novoClick.length === 2) {
@@ -87,67 +90,61 @@ const Sagital = () => {
     formData.append("ref_y2", clicks[1].y);
     formData.append("referencia_metros", 1.0);
 
-        try {
-            const response = await axios.post(
-                "http://localhost:5000/process-image-sagital",
-                formData,
-                {
-                    headers: { "Content-Type": "multipart/form-data" },
-                    timeout: 60000,
-                }
-            );
-            const { image, distancias, angulos } = response.data;
-
-            const processedImageBase64 = `data:image/jpeg;base64,${image}`;
-            setProcessedImageUrl(processedImageBase64);
-            setDistancias(distancias);
-            setAngulos(angulos);
-        } catch (err) {
-            console.error("Erro ao enviar imagem:", err);
-            alert("Erro ao processar imagem sagital");
-        } finally {
-            setLoading(false);
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/process-image-sagital",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          timeout: 60000,
         }
-    };
+      );
+      const { image, distancias, angulos } = response.data;
 
-    const handleContinue = () => {
-        navigate("/cadastrar-avaliacao", {
-            state: {
-                paciente_id: pacienteId,
-                frontal: dadosFrontal,
-                sagital: {
-                    imagem: processedImageUrl,
-                    distancias: distancias,
-                    angulos: angulos
-                },
-            },
-        });
-    };
+      const processedImageBase64 = `data:image/jpeg;base64,${image}`;
+      setProcessedImageUrl(processedImageBase64);
+      setDistancias(distancias);
+      setAngulos(angulos);
+    } catch (err) {
+      console.error("Erro ao enviar imagem:", err);
+      alert("Erro ao processar imagem sagital");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
-        <>
-            <Helmet>
-                <title>Avaliação Sagital - AlignMe</title>
-                <link
-                rel="stylesheet"
-                href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-                />
-                <link
-                rel="stylesheet"
-                href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-                />
-                <link
-                rel="stylesheet"
-                href="/assets/css/main.css"
-                />
-                <link
-                rel="stylesheet"
-                href="/Sagital.css"
-                />
-            </Helmet>
+  const handleContinue = () => {
+    navigate("/cadastrar-avaliacao", {
+      state: {
+        paciente_id: pacienteId,
+        frontal: dadosFrontal,
+        sagital: {
+          imagem: processedImageUrl,
+          distancias,
+          angulos,
+        },
+      },
+    });
+  };
 
-            <div className="d-flex flex-column min-vh-100 avaliacao-frontal-root">
-                <Header />
+  return (
+    <>
+      <Helmet>
+        <title>Avaliação Sagital - AlignMe</title>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+        />
+        <link rel="stylesheet" href="/assets/css/main.css" />
+        <link rel="stylesheet" href="/Sagital.css" />
+      </Helmet>
+
+      <div className="d-flex flex-column min-vh-100 avaliacao-frontal-root">
+        <Header />
 
         <div className="avaliacao-sagital-container">
           <div className="page-title-frontal text-center">
@@ -180,47 +177,68 @@ const Sagital = () => {
 
               <div className="zoom-container">
                 <div className="zoom-buttons">
-                    <button onClick={zoomIn}>+</button>
-                    <button onClick={zoomOut}>−</button>
-                    <button onClick={resetZoom}>⟳</button>
+                  <button onClick={zoomIn}>+</button>
+                  <button onClick={zoomOut}>−</button>
+                  <button onClick={resetZoom}>⟳</button>
                 </div>
 
-                <div className="zoom-container">
-        <div className="zoom-buttons">
-            <button onClick={zoomIn}>+</button>
-            <button onClick={zoomOut}>−</button>
-            <button onClick={resetZoom}>⟳</button>
-        </div>
+                <div
+                  className="zoom-image-wrapper"
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseLeave}
+                  style={{
+                    cursor: isDragging ? "grabbing" : "auto",
+                    overflow: "auto",
+                    position: "relative",
+                    maxWidth: "100%",
+                    maxHeight: "80vh",
+                    border: "1px solid #ccc",
+                  }}
+                >
+                  <div
+                    style={{
+                      transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+                      transformOrigin: "top left",
+                      position: "relative",
+                      display: "inline-block",
+                    }}
+                  >
+                    <img
+                      ref={imageRef}
+                      src={imageUrl}
+                      alt="Imagem sagital selecionada"
+                      onDoubleClick={handleDoubleClick}
+                      style={{
+                        display: "block",
+                        width: "auto",
+                        height: "auto",
+                        userSelect: "none",
+                        pointerEvents: "auto",
+                      }}
+                      draggable="false"
+                    />
 
-        <div
-            className="zoom-image-wrapper"
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseLeave}
-            // 👇 Aqui o cursor só muda enquanto arrasta
-            style={{
-            cursor: isDragging ? "grabbing" : "auto",
-            }}
-        >
-            <img
-            ref={imageRef}
-            src={imageUrl}
-            alt="Imagem sagital selecionada"
-            onDoubleClick={handleDoubleClick}
-            className="imagem-sagital-selecionada"
-            style={{
-                transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
-                transition: isDragging ? "none" : "transform 0.3s ease",
-                transformOrigin: "center center",
-                userSelect: "none",
-                pointerEvents: "auto", // evita interferência da imagem
-            }}
-            draggable="false"
-            />
-        </div>
-        </div>
-            </div>
+                    {clicks.map((ponto, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          position: "absolute",
+                          left: `${(ponto.x / imageRef.current.width) * 100}%`,
+                          top: `${(ponto.y / imageRef.current.height) * 100}%`,
+                          width: "10px",
+                          height: "10px",
+                          backgroundColor: "red",
+                          borderRadius: "50%",
+                          transform: "translate(-50%, -50%)",
+                          pointerEvents: "none",
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 

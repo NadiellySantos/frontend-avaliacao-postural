@@ -20,6 +20,7 @@ const App = () => {
   const [idFoto, setIdFoto] = useState(null);
   const [loading, setLoading] = useState(false);
   const imageRef = useRef(null);
+  const wrapperRef = useRef(null);
   const previousObjectUrl = useRef(null);
 
   // 🔹 Zoom e Pan
@@ -79,16 +80,19 @@ const App = () => {
     setIdFoto(null);
   };
 
+  // ✅ Double click: guarda coordenadas relativas (0 a 1)
   const handleDoubleClick = (event) => {
     if (!imageRef.current) return;
+
     const rect = imageRef.current.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    const x = (event.clientX - rect.left) / rect.width;
+    const y = (event.clientY - rect.top) / rect.height;
+
     const novoClick = [...clicks, { x, y }];
 
     if (novoClick.length === 2) {
-      const dx = novoClick[1].x - novoClick[0].x;
-      const dy = novoClick[1].y - novoClick[0].y;
+      const dx = (novoClick[1].x - novoClick[0].x) * rect.width;
+      const dy = (novoClick[1].y - novoClick[0].y) * rect.height;
       const distanciaPixels = Math.sqrt(dx * dx + dy * dy);
       setReferencia(Number(distanciaPixels.toFixed(2)));
       setClicks([]);
@@ -171,7 +175,6 @@ const App = () => {
                 Imagem Original (clique duas vezes na régua: 1 metro)
               </h4>
 
-              {/* ✅ Contêiner com zoom e pan */}
               <div className="zoom-container">
                 <div className="zoom-buttons">
                   <button onClick={zoomIn}>+</button>
@@ -179,32 +182,64 @@ const App = () => {
                   <button onClick={resetZoom}>⟳</button>
                 </div>
 
+                {/* ✅ Container ajustado para não cortar a imagem */}
                 <div
                   className="zoom-image-wrapper"
+                  ref={wrapperRef}
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
                   onMouseUp={handleMouseUp}
                   onMouseLeave={handleMouseLeave}
-                  // 👇 Cursor fica seta normal e só vira "grabbing" enquanto arrasta
                   style={{
                     cursor: isDragging ? "grabbing" : "auto",
+                    overflow: "auto", // permite scroll se a imagem for maior
+                    position: "relative",
+                    maxWidth: "100%",
+                    maxHeight: "80vh",
+                    border: "1px solid #ccc",
                   }}
                 >
-                  <img
-                    ref={imageRef}
-                    src={imageUrl}
-                    alt="Selecionada"
-                    onDoubleClick={handleDoubleClick}
-                    className="imagem-frontal-selecionada"
+                  {/* ✅ Wrapper transformado */}
+                  <div
                     style={{
                       transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
-                      transition: isDragging ? "none" : "transform 0.3s ease",
-                      transformOrigin: "center center",
-                      userSelect: "none",
-                      pointerEvents: "auto",
+                      transformOrigin: "top left",
+                      position: "relative",
+                      display: "inline-block",
                     }}
-                    draggable="false"
-                  />
+                  >
+                    <img
+                      ref={imageRef}
+                      src={imageUrl}
+                      alt="Selecionada"
+                      onDoubleClick={handleDoubleClick}
+                      style={{
+                        display: "block",
+                        width: "auto",
+                        height: "auto",
+                        userSelect: "none",
+                        pointerEvents: "auto",
+                      }}
+                      draggable="false"
+                    />
+
+                    {clicks.map((ponto, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          position: "absolute",
+                          left: `${ponto.x * 100}%`,
+                          top: `${ponto.y * 100}%`,
+                          width: "10px",
+                          height: "10px",
+                          backgroundColor: "red",
+                          borderRadius: "50%",
+                          transform: "translate(-50%, -50%)",
+                          pointerEvents: "none",
+                        }}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -225,7 +260,11 @@ const App = () => {
             <div className="container-avaliacao-frontal">
               <div className="imagem-box-frontal">
                 <h4 className="titulo-frontal-secundario">Imagem Processada (Frontal)</h4>
-                <img src={processedImageUrl} alt="Processada" className="imagem-frontal-processada" />
+                <img
+                  src={processedImageUrl}
+                  alt="Processada"
+                  className="imagem-frontal-processada"
+                />
               </div>
 
               <div className="medicoes-box-frontal">
