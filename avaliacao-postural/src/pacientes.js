@@ -74,7 +74,7 @@ const Pacientes = () => {
                     <p className="card-text">Sexo: {paciente.sexo}</p>
                     <button
                       className="btn btn-primary"
-                      onClick={() => navigate(`/avaliar/${paciente.id}`)}
+                      onClick={() => navigate("/historico", { state: { paciente_id: paciente.id } })}
                     >
                       Avaliar Postura
                     </button>

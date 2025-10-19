@@ -34,14 +34,19 @@ const Historico = () => {
     fetchAvaliacoes();
   }, [pacienteId]);
 
-  const handleVoltar = () => navigate("/");
 
   if (!pacienteId) {
     return (
       <div style={{ padding: "20px", fontFamily: "Arial" }}>
         <h2>Histórico de Avaliações</h2>
         <p>Nenhum paciente selecionado.</p>
-        <button onClick={handleVoltar}>Voltar</button>
+        <button
+          className="btn btn-primary"
+          onClick={() => navigate(`/avaliar/${pacienteId}`)}
+        >
+          Avaliar Postura
+        </button>
+        
       </div>
     );
   }
@@ -78,7 +83,13 @@ const Historico = () => {
         <Header />
         <div className="container mt-4" style={{ fontFamily: "Arial" }}>
           <h2 className="text-center mb-4">Histórico de Avaliações do Paciente</h2>
-
+          <button
+              className="btn btn-primary"
+              onClick={() => navigate(`/avaliar/${pacienteId}`)}
+              style={{ marginBottom: "20px" }}
+          >   
+              Avaliar Postura
+          </button> 
           {loading ? (
             <p>Carregando avaliações...</p>
           ) : avaliacoes.length === 0 ? (
