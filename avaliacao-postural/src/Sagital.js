@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import "./Sagital.css";
@@ -6,6 +6,8 @@ import Header from "./header.js";
 import Footer from "./footer.js";
 import { Helmet } from "react-helmet";
 import sagitalImg from "./img/sagital.jpg";
+import "bootstrap/dist/css/bootstrap.min.css";
+import * as bootstrap from "bootstrap";
 
 const Sagital = () => {
   const navigate = useNavigate();
@@ -22,8 +24,9 @@ const Sagital = () => {
   const [angulos, setAngulos] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // 🔹 Zoom e pan
+  // 🔹 Zoom e Pan
   const imageRef = useRef(null);
+  const wrapperRef = useRef(null);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -44,16 +47,32 @@ const Sagital = () => {
   };
 
   const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    setPosition({ x: e.clientX - startPos.x, y: e.clientY - startPos.y });
+    if (isDragging) {
+      setPosition({ x: e.clientX - startPos.x, y: e.clientY - startPos.y });
+    }
   };
 
   const handleMouseUp = () => setIsDragging(false);
   const handleMouseLeave = () => setIsDragging(false);
 
+  // 🔹 Inicializa e limpa tooltips ao atualizar distâncias
+  useEffect(() => {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltips = [...tooltipTriggerList].map(
+      (el) =>
+        new bootstrap.Tooltip(el, {
+          trigger: "hover",
+        })
+    );
+    return () => {
+      tooltips.forEach((t) => t.dispose());
+    };
+  }, [distancias]);
+
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files && e.target.files[0];
     if (!file) return;
+
     setImageFile(file);
     setImageUrl(URL.createObjectURL(file));
     setProcessedImageUrl(null);
@@ -62,7 +81,7 @@ const Sagital = () => {
     setAngulos([]);
   };
 
-  // ✅ Double click: coordenadas em pixels reais
+  // ✅ Double click: define distância de referência (1 metro)
   const handleDoubleClick = (event) => {
     if (!imageRef.current) return;
 
@@ -99,15 +118,14 @@ const Sagital = () => {
           timeout: 60000,
         }
       );
-      const { image, distancias, angulos } = response.data;
 
-      const processedImageBase64 = `data:image/jpeg;base64,${image}`;
-      setProcessedImageUrl(processedImageBase64);
-      setDistancias(distancias);
-      setAngulos(angulos);
+      const { image, distancias, angulos } = response.data;
+      if (image) setProcessedImageUrl(`data:image/jpeg;base64,${image}`);
+      setDistancias(distancias || []);
+      setAngulos(angulos || []);
     } catch (err) {
       console.error("Erro ao enviar imagem:", err);
-      alert("Erro ao processar imagem sagital");
+      alert("Erro ao processar imagem sagital.");
     } finally {
       setLoading(false);
     }
@@ -139,17 +157,15 @@ const Sagital = () => {
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
         />
-        <link rel="stylesheet" href="/assets/css/main.css" />
-        <link rel="stylesheet" href="/Sagital.css" />
       </Helmet>
 
       <div className="d-flex flex-column min-vh-100 avaliacao-frontal-root">
         <Header />
 
         <div className="avaliacao-sagital-container">
-          <div className="page-title-frontal text-center">
-            <h2 className="titulo-sagital-principal">Avaliação Postural - Sagital</h2>
-          </div>
+          <h2 className="titulo-sagital-principal text-center">
+            Avaliação Postural - Sagital
+          </h2>
 
           <div style={{ display: "flex", flexDirection: "column", marginBottom: "20px" }}>
             <p style={{ marginLeft: "20px" }}>Imagem exemplo.</p>
@@ -166,14 +182,8 @@ const Sagital = () => {
           {imageUrl && !processedImageUrl && (
             <div className="imagem-box-sagital">
               <h4 className="titulo-sagital-secundario">
-                Imagem Original{" "}
-                {clicks.length > 0 && (
-                  <span className="badge-cliques-sagital">Cliques: {clicks.length}/2</span>
-                )}
+                Imagem Original (clique duas vezes na régua: 1 metro)
               </h4>
-              <p className="texto-ajuda-sagital">
-                Clique duas vezes na régua: início e fim de 1 metro
-              </p>
 
               <div className="zoom-container">
                 <div className="zoom-buttons">
@@ -250,7 +260,7 @@ const Sagital = () => {
                 <h4 className="titulo-sagital-secundario">Imagem Processada (Sagital)</h4>
                 <img
                   src={processedImageUrl}
-                  alt="Imagem sagital processada"
+                  alt="Imagem processada"
                   className="imagem-sagital-processada"
                 />
               </div>
@@ -260,8 +270,15 @@ const Sagital = () => {
                 <ul className="lista-medicoes-sagital">
                   {distancias && distancias.length > 0 ? (
                     distancias.map((d, i) => (
-                      <li key={i} className="item-medicao-sagital">
-                        {d.ponto1} ↔ {d.ponto2}: <strong>{d.distancia_cm} cm</strong>
+                      <li
+                        key={i}
+                        className="item-medicao-sagital"
+                        data-bs-toggle={d.descricao ? "tooltip" : undefined}
+                        data-bs-placement="top"
+                        title={d.descricao || ""}
+                      >
+                        {d.ponto1} ↔ {d.ponto2}:{" "}
+                        <strong>{d.distancia_cm} cm</strong>
                       </li>
                     ))
                   ) : (
@@ -275,7 +292,13 @@ const Sagital = () => {
                 <ul className="lista-medicoes-sagital">
                   {angulos && angulos.length > 0 ? (
                     angulos.map((a, i) => (
-                      <li key={i} className="item-medicao-sagital">
+                      <li
+                        key={i}
+                        className="item-medicao-sagital"
+                        data-bs-toggle={a.descricao ? "tooltip" : undefined}
+                        data-bs-placement="top"
+                        title={a.descricao || ""}
+                      >
                         {a.nome}: <strong>{a.angulo_graus}°</strong>
                       </li>
                     ))
@@ -287,18 +310,20 @@ const Sagital = () => {
             </div>
           )}
 
-          <button
-            className="avaliacao-sagital-continue-btn"
-            disabled={loading || !processedImageUrl}
-            onClick={handleContinue}
-          >
-            {loading ? "Processando..." : "Continuar para Cadastro de Avaliação"}
-          </button>
+          <div className="text-center mt-4">
+            <button
+              className="avaliacao-sagital-continue-btn"
+              disabled={loading || !processedImageUrl}
+              onClick={handleContinue}
+            >
+              {loading ? "Processando..." : "Continuar para Cadastro de Avaliação"}
+            </button>
 
-          <div className="texto-ajuda-sagital">
-            {!processedImageUrl && !loading && (
-              <span>O botão será habilitado quando o processamento terminar.</span>
-            )}
+            <div className="texto-ajuda-sagital">
+              {!processedImageUrl && !loading && (
+                <span>O botão será habilitado quando o processamento terminar.</span>
+              )}
+            </div>
           </div>
         </div>
 

@@ -6,6 +6,8 @@ import Header from "./header.js";
 import Footer from "./footer.js";
 import { Helmet } from "react-helmet";
 import frontalImg from "./img/frontal.jpg";
+import "bootstrap/dist/css/bootstrap.min.css";
+import * as bootstrap from "bootstrap";
 
 const App = () => {
   const navigate = useNavigate();
@@ -60,6 +62,21 @@ const App = () => {
     };
   }, []);
 
+  // 🔹 Inicializa e limpa tooltips ao atualizar distâncias
+  useEffect(() => {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltips = [...tooltipTriggerList].map(
+      (el) =>
+        new bootstrap.Tooltip(el, {
+          trigger: "hover",
+        })
+    );
+
+    return () => {
+      tooltips.forEach((t) => t.dispose());
+    };
+  }, [distancias]);
+
   const handleFileChange = (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
@@ -80,7 +97,7 @@ const App = () => {
     setIdFoto(null);
   };
 
-  // ✅ Double click: guarda coordenadas relativas (0 a 1)
+  // ✅ Double click: define distância de referência (1 metro)
   const handleDoubleClick = (event) => {
     if (!imageRef.current) return;
 
@@ -119,7 +136,7 @@ const App = () => {
 
       const resp = response.data || {};
       const returnedImage = resp.image || resp.imagem || resp.img || null;
-      const returnedDistancias = resp.distancias || resp.distances || resp.medicoes || [];
+      const returnedDistancias = resp.distancias || [];
       const returnedIdFoto = resp.id_foto ?? resp.idFoto ?? resp.id ?? null;
 
       if (returnedImage) {
@@ -147,8 +164,6 @@ const App = () => {
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
         />
-        <link rel="stylesheet" href="/assets/css/main.css" />
-        <link rel="stylesheet" href="/App.css" />
       </Helmet>
 
       <div className="d-flex flex-column min-vh-100 avaliacao-frontal-root">
@@ -182,7 +197,6 @@ const App = () => {
                   <button onClick={resetZoom}>⟳</button>
                 </div>
 
-                {/* ✅ Container ajustado para não cortar a imagem */}
                 <div
                   className="zoom-image-wrapper"
                   ref={wrapperRef}
@@ -192,14 +206,13 @@ const App = () => {
                   onMouseLeave={handleMouseLeave}
                   style={{
                     cursor: isDragging ? "grabbing" : "auto",
-                    overflow: "auto", // permite scroll se a imagem for maior
+                    overflow: "auto",
                     position: "relative",
                     maxWidth: "100%",
                     maxHeight: "80vh",
                     border: "1px solid #ccc",
                   }}
                 >
-                  {/* ✅ Wrapper transformado */}
                   <div
                     style={{
                       transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
@@ -272,7 +285,13 @@ const App = () => {
                 <ul className="lista-medicoes-frontal">
                   {distancias && distancias.length > 0 ? (
                     distancias.map((d, i) => (
-                      <li key={i} className="item-medicao-frontal">
+                      <li
+                        key={i}
+                        className="item-medicao-frontal"
+                        data-bs-toggle={d.descricao ? "tooltip" : undefined}
+                        data-bs-placement="top"
+                        title={d.descricao || ""}
+                      >
                         {d.ponto1} ↔ {d.ponto2}: <strong>{d.distancia_cm} cm</strong>
                       </li>
                     ))

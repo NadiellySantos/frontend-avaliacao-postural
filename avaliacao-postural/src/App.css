@@ -307,3 +307,14 @@
   max-height: 80vh; /* ou outro valor adequado */
   border: 1px solid #ccc;
 }
+
+.tooltip-inner {
+  background-color: #333 !important;
+  color: #fff !important;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.tooltip-arrow::before {
+  border-top-color: #333 !important;
+}
