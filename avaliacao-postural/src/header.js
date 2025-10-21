@@ -17,6 +17,9 @@ const Header = () => {
         <button className="btn btn-outline-secondary" onClick={() => navigate(-1)}>
           <i className="bi bi-arrow-left"></i> Voltar
         </button>
+        <button className="btn btn-outline-secondary" onClick={() => navigate("/pacientes")}>
+          <i className="bi bi-house"></i>
+        </button>
 
         {/* Nome do App */}
         <h5>
