@@ -99,28 +99,36 @@ const App = () => {
 
   // ✅ Double click: define distância de referência (1 metro)
   const handleDoubleClick = (event) => {
-    if (!imageRef.current) return;
+  if (!imageRef.current) return;
 
-    const rect = imageRef.current.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width;
-    const y = (event.clientY - rect.top) / rect.height;
+  const rect = imageRef.current.getBoundingClientRect();
+  const img = imageRef.current;
 
-    const novoClick = [...clicks, { x, y }];
+  // Corrige influência do zoom
+  const scaleX = img.naturalWidth / rect.width;
+  const scaleY = img.naturalHeight / rect.height;
 
-    if (novoClick.length === 2) {
-      const dx = (novoClick[1].x - novoClick[0].x) * rect.width;
-      const dy = (novoClick[1].y - novoClick[0].y) * rect.height;
-      const distanciaPixels = Math.sqrt(dx * dx + dy * dy);
-      setReferencia(Number(distanciaPixels.toFixed(2)));
-      setClicks([]);
+  // Coordenadas reais (independentes do zoom)
+  const x = (event.clientX - rect.left) * scaleX;
+  const y = (event.clientY - rect.top) * scaleY;
 
-      if (imageFile) {
-        sendImageToBackend(imageFile, distanciaPixels);
-      }
-    } else {
-      setClicks(novoClick);
+  const novoClick = [...clicks, { x, y }];
+
+  if (novoClick.length === 2) {
+    const dx = novoClick[1].x - novoClick[0].x;
+    const dy = novoClick[1].y - novoClick[0].y;
+    const distanciaPixels = Math.sqrt(dx * dx + dy * dy);
+    setReferencia(Number(distanciaPixels.toFixed(2)));
+    setClicks([]);
+
+    if (imageFile) {
+      sendImageToBackend(imageFile, distanciaPixels);
     }
-  };
+  } else {
+    setClicks(novoClick);
+  }
+};
+
 
   const sendImageToBackend = async (file, referenciaPixels) => {
     setLoading(true);
@@ -241,14 +249,14 @@ const App = () => {
                         key={i}
                         style={{
                           position: "absolute",
-                          left: `${ponto.x * 100}%`,
-                          top: `${ponto.y * 100}%`,
+                          left: `${ponto.x}px`,
+                          top: `${ponto.y}px`,
                           width: "10px",
                           height: "10px",
                           backgroundColor: "red",
                           borderRadius: "50%",
                           transform: "translate(-50%, -50%)",
-                          pointerEvents: "none",
+                          pointerEvents: "auto",
                         }}
                       />
                     ))}

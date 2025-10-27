@@ -82,22 +82,41 @@ const Sagital = () => {
   };
 
   // ✅ Double click: define distância de referência (1 metro)
-  const handleDoubleClick = (event) => {
-    if (!imageRef.current) return;
+ const handleDoubleClick = (event) => {
+  if (!imageRef.current) return;
 
-    const rect = imageRef.current.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+  const img = imageRef.current;
+  const rect = img.getBoundingClientRect();
 
-    const novoClick = [...clicks, { x, y }];
+  // 🔹 Corrige coordenadas com base no tamanho real da imagem
+  const scaleX = img.naturalWidth / rect.width;
+  const scaleY = img.naturalHeight / rect.height;
 
-    if (novoClick.length === 2) {
-      if (imageFile) sendImageToBackend(imageFile, novoClick);
-      setClicks([]);
-    } else {
-      setClicks(novoClick);
+  const x = (event.clientX - rect.left) * scaleX;
+  const y = (event.clientY - rect.top) * scaleY;
+
+  const novoClick = [...clicks, { x, y }];
+
+  if (novoClick.length === 2) {
+    // 🔸 Calcula distância real em pixels (independente do zoom)
+    const dx = novoClick[1].x - novoClick[0].x;
+    const dy = novoClick[1].y - novoClick[0].y;
+    const distanciaPixels = Math.sqrt(dx * dx + dy * dy);
+
+    // ✅ Mantém o envio como no seu código original
+    if (imageFile) {
+      sendImageToBackend(imageFile, novoClick);
     }
-  };
+
+    setClicks([]);
+  } else {
+    setClicks(novoClick);
+  }
+};
+
+
+
+
 
   const sendImageToBackend = async (file, clicks) => {
     setLoading(true);
@@ -235,14 +254,14 @@ const Sagital = () => {
                         key={i}
                         style={{
                           position: "absolute",
-                          left: `${(ponto.x / imageRef.current.width) * 100}%`,
-                          top: `${(ponto.y / imageRef.current.height) * 100}%`,
+                          left: `${ponto.x}px`,
+                          top: `${ponto.y}px`,
                           width: "10px",
                           height: "10px",
                           backgroundColor: "red",
                           borderRadius: "50%",
                           transform: "translate(-50%, -50%)",
-                          pointerEvents: "none",
+                          pointerEvents: "auto",
                         }}
                       />
                     ))}
