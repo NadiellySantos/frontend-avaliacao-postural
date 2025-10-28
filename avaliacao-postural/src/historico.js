@@ -193,8 +193,22 @@ const Historico = () => {
                               />
                             ) : (
                               <p>Nenhuma imagem sagital disponível.</p>
+                            )}                            
+                            {Array.isArray(h.angulos_sagital) && h.angulos_sagital.length > 0 ? (
+                              <>
+                                <h6 className="mt-3">🧭 Ângulos Sagitais:</h6>
+                                <ul style={{ fontSize: "0.9rem" }}>
+                                  {h.angulos_sagital.map((a, i) => (
+                                    <li key={i}>
+                                      {a.nome}: {" "}
+                                      <strong>{a.angulo_graus !== undefined ? a.angulo_graus.toFixed(2) : "—"}°</strong>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </>
+                            ) : (
+                              <p>Nenhum ângulo sagital registrado.</p>
                             )}
-
                             <h6 className="mt-3">📐 Medidas Sagitais:</h6>
                             {Array.isArray(h.medidas_sagital) &&
                             h.medidas_sagital.length > 0 ? (

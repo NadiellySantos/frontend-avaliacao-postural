@@ -43,9 +43,11 @@ const CadastroAvaliacao = () => {
         foto_sagital: sagital.imagem || sagital.processedImageUrl || "",
         medidas_frontal: JSON.stringify(frontal.distancias || []),
         medidas_sagital: JSON.stringify(sagital.distancias || []),
+        angulos_sagital: JSON.stringify(sagital.angulos || []), // ← NOVO
       }));
     }
   }, [pacienteId, frontal, sagital]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,7 +68,7 @@ const CadastroAvaliacao = () => {
         foto_sagital: formData.foto_sagital,
         medidas_frontal: formData.medidas_frontal,
         medidas_sagital: formData.medidas_sagital,
-        //cpf: formData.cpf,
+        angulos_sagital: formData.angulos_sagital, // ← NOVO
         altura: formData.altura ? parseInt(formData.altura) : null,
         resultado_avaliacao: formData.resultado_avaliacao,
         data_avaliacao: formData.data_avaliacao,
@@ -197,6 +199,20 @@ const CadastroAvaliacao = () => {
                         </ul>
                       ) : (
                         <p className="texto-ajuda-avaliacao">Nenhuma medida disponível</p>
+                      )}
+                      <h5 className="mt-3">Ângulos Sagitais</h5>
+                      {sagital?.angulos && sagital.angulos.length > 0 ? (
+                        <ul className="lista-medidas">
+                          {sagital.angulos.map((angulo, index) => (
+                            <li key={index} className="item-medida">
+                              <small>
+                                {angulo.nome}: <strong>{angulo.angulo_graus}°</strong>
+                              </small>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="texto-ajuda-avaliacao">Nenhum ângulo registrado</p>
                       )}
                     </div>
                   </div>
