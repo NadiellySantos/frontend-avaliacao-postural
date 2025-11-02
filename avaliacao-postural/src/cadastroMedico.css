@@ -1,0 +1,14 @@
+.cadastro-medico-container {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.card {
+  border-radius: 15px;
+}
+
+label {
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: block;
+}

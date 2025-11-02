@@ -1,0 +1,61 @@
+/* Fundo azul para a página de login */
+.login-wrapper {
+  background-color: #99c0fa; /* Azul Bootstrap */
+  background-image: linear-gradient(to right, #a1c2f5, #d0e3f7); /* Degradê azul */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  flex-direction: column;
+}
+
+/* Cartão central de login */
+.login-card {
+  background-color: #ffffff;
+  padding: 2rem 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+  width: 100%;
+}
+
+/* Título do login */
+.login-title {
+  text-align: center;
+  margin-bottom: 1.8rem;
+  color: #0d6efd;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+/* Estilização dos inputs */
+.login-card .form-control {
+  border-radius: 12px;
+  border: 1px solid #ced4da;
+}
+
+/* Botões */
+.login-card .btn {
+  border-radius: 12px;
+  padding: 0.6rem;
+  font-weight: 500;
+}
+
+/* Alerta de sucesso/erro */
+.alert {
+  border-radius: 10px;
+  font-size: 0.9rem;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.botao-sobre {
+  background-color: transparent;
+  border: none;
+  color: #0d6efd;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}

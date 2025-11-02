@@ -1,0 +1,46 @@
+.sobre-container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  line-height: 1.6;
+  font-family: "Inter", sans-serif;
+}
+
+.sobre-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.sobre-header h1 {
+  color: #0c4a6e;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.sobre-section {
+  margin-bottom: 30px;
+}
+
+.sobre-section h2 {
+  color: #0369a1;
+  margin-bottom: 10px;
+}
+
+.sobre-section ul,
+.sobre-section ol {
+  margin-left: 20px;
+}
+
+.sobre-section strong {
+  color: #0c4a6e;
+}
+
+.sobre-footer {
+  text-align: center;
+  margin-top: 40px;
+  color: #666;
+  font-size: 0.9rem;
+}
