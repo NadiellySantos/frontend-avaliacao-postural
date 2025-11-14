@@ -137,7 +137,8 @@ const App = () => {
     formData.append("referencia_pixels", referenciaPixels);
 
     try {
-      const response = await axios.post("http://localhost:5000/process-image", formData, {
+      // NOVA LINHA (backend no Azure):
+      const response = await axios.post("https://backend-avaliacao-postural-aff8edhhaqdegmb3.australiaeast-01.azurewebsites.net/process-image", formData, {
         headers: { "Content-Type": "multipart/form-data" },
         timeout: 60000,
       });

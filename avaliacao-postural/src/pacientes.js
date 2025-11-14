@@ -13,7 +13,7 @@ const Pacientes = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/listar-pacientes")
+      .get("https://backend-avaliacao-postural-aff8edhhaqdegmb3.australiaeast-01.azurewebsites.net/listar-pacientes")
       .then((response) => setPacientes(response.data))
       .catch((error) => console.error("Erro ao buscar pacientes:", error));
   }, []);
