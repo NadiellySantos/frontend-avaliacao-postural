@@ -8,7 +8,7 @@ const Medicos = () => {
   const [medico, setMedico] = useState([]);
 
   useEffect(() => {
-    axios.get("https://backend-avaliacao-postural-aff8edhhaqdegmb3.australiaeast-01.azurewebsites.net/listar-medicos")
+    axios.get("https://backend-alignme.azurewebsites.net/listar-medicos")
       .then(response => setMedico(response.data))
       .catch(error => console.error("Erro ao buscar medicos:", error));
   }, []);

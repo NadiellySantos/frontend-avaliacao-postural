@@ -33,7 +33,7 @@ const PesquisarHistoricoPaciente = () => {
       };
       
       const response = await axios.post(
-        "https://backend-avaliacao-postural-aff8edhhaqdegmb3.australiaeast-01.azurewebsites.net/listar-avaliacao",
+        "https://backend-alignme.azurewebsites.net/listar-avaliacao",
         cpfParaEnvio,
         {
           headers: {

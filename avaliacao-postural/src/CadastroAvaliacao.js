@@ -77,7 +77,7 @@ const CadastroAvaliacao = () => {
       console.log("Enviando dados:", dadosEnvio);
 
       const response = await axios.post(
-        "https://backend-avaliacao-postural-aff8edhhaqdegmb3.australiaeast-01.azurewebsites.net/cadastrar-avaliacao", 
+        "https://backend-alignme.azurewebsites.net/cadastrar-avaliacao", 
         dadosEnvio, 
         {
           headers: {

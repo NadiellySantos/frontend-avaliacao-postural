@@ -45,7 +45,7 @@ const CadastroMedico = () => {
         telefone: limparTelefone(medico.telefone)
       };
 
-      await axios.post("https://backend-avaliacao-postural-aff8edhhaqdegmb3.australiaeast-01.azurewebsites.net/cadastrar-medico", medicoParaEnvio, {
+      await axios.post("https://backend-alignme.azurewebsites.net/cadastrar-medico", medicoParaEnvio, {
         headers: { "Content-Type": "application/json" },
       });
 

@@ -21,7 +21,7 @@ const Historico = () => {
 
     const fetchAvaliacoes = async () => {
       try {
-        const response = await axios.get(`https://backend-avaliacao-postural-aff8edhhaqdegmb3.australiaeast-01.azurewebsites.net/historico/${pacienteId}`);
+        const response = await axios.get(`https://backend-alignme.azurewebsites.net/historico/${pacienteId}`);
         setAvaliacoes(response.data);
       } catch (error) {
         console.error("Erro ao buscar avaliações:", error);

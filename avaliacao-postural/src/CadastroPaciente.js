@@ -73,7 +73,7 @@ const CadastroPaciente = () => {
         telefone: limparTelefone(paciente.telefone)
       };
 
-      await axios.post("https://backend-avaliacao-postural-aff8edhhaqdegmb3.australiaeast-01.azurewebsites.net/cadastrar-paciente", pacienteParaEnvio);
+      await axios.post("https://backend-alignme.azurewebsites.net/cadastrar-paciente", pacienteParaEnvio);
       setMensagem("Paciente cadastrado com sucesso!");
       setPaciente({
         cpf: "",

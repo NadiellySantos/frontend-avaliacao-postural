@@ -130,7 +130,7 @@ const Sagital = () => {
 
     try {
       const response = await axios.post(
-        "https://backend-avaliacao-postural-aff8edhhaqdegmb3.australiaeast-01.azurewebsites.net/process-image-sagital",
+        "https://backend-alignme.azurewebsites.net/process-image-sagital",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

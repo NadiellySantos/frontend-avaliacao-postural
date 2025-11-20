@@ -138,7 +138,7 @@ const App = () => {
 
     try {
       // NOVA LINHA (backend no Azure):
-      const response = await axios.post("https://backend-avaliacao-postural-aff8edhhaqdegmb3.australiaeast-01.azurewebsites.net/process-image", formData, {
+      const response = await axios.post("https://backend-alignme.azurewebsites.net/process-image", formData, {
         headers: { "Content-Type": "multipart/form-data" },
         timeout: 60000,
       });

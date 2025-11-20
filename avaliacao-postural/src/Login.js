@@ -28,7 +28,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://backend-avaliacao-postural-aff8edhhaqdegmb3.australiaeast-01.azurewebsites.net/login",
+        "https://backend-alignme.azurewebsites.net/login",
         credentials,
         {
           headers: {
