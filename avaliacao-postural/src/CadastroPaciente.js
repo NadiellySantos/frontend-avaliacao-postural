@@ -6,30 +6,7 @@ import Footer from "./footer.js";
 import "./cadastroPaciente.css";
 import { Helmet } from "react-helmet";
 import { IMaskInput } from 'react-imask';
-
-// Carrega Bootstrap CSS e JS dinamicamente
-const loadBootstrap = () => {
-  // CSS
-  const cssLink = document.createElement("link");
-  cssLink.href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css";
-  cssLink.rel = "stylesheet";
-  cssLink.integrity = "sha384-Gtvn6A1SdT1oTi16rjYI6X1u1G4IM6zD0RbzWAcUuCdC7RlIrGb1n8H6sVfyc2Yg";
-  cssLink.crossOrigin = "anonymous";
-  document.head.appendChild(cssLink);
-
-  // Bootstrap Icons (opcional)
-  const iconLink = document.createElement("link");
-  iconLink.href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css";
-  iconLink.rel = "stylesheet";
-  document.head.appendChild(iconLink);
-
-  // JS Bundle
-  const script = document.createElement("script");
-  script.src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js";
-  script.integrity = "sha384-Cw9F3z+1EEXNPAIXF7opbX/NqEPXYYs+Q9dBoHtLNjOnCMgS3SVxvUZonhzGFLX8";
-  script.crossOrigin = "anonymous";
-  document.body.appendChild(script);
-};
+import LgpdModal from "./LgpdModal"; // LINHA 1: Import
 
 const CadastroPaciente = () => {
   const navigate = useNavigate();
@@ -52,6 +29,7 @@ const CadastroPaciente = () => {
   });
 
   const [mensagem, setMensagem] = useState("");
+  const [showLgpdModal, setShowLgpdModal] = useState(false); // LINHA 2: Estado
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,6 +44,10 @@ const CadastroPaciente = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setShowLgpdModal(true); // LINHA 3: Abrir modal
+  };
+
+  const handleLgpdConfirm = async () => {
     try {
       const pacienteParaEnvio = {
         ...paciente,
@@ -87,9 +69,11 @@ const CadastroPaciente = () => {
         idade: "",
         sexo: "",
       });
+      setShowLgpdModal(false);
     } catch (error) {
       console.error("Erro ao cadastrar paciente:", error);
       setMensagem("Erro ao cadastrar paciente.");
+      setShowLgpdModal(false);
     }
   };
 
@@ -114,6 +98,14 @@ const CadastroPaciente = () => {
           href="/pacientes.css"
         />
       </Helmet>
+
+      <LgpdModal // LINHA 4: Modal no JSX
+        show={showLgpdModal}
+        onClose={() => setShowLgpdModal(false)}
+        onConfirm={handleLgpdConfirm}
+        patientName={paciente.nome}
+      />
+
       <div className="d-flex flex-column min-vh-100">
         <Header />
 
@@ -270,6 +262,30 @@ const CadastroPaciente = () => {
       </div>
     </>
   );
+};
+
+// Carrega Bootstrap CSS e JS dinamicamente
+const loadBootstrap = () => {
+  // CSS
+  const cssLink = document.createElement("link");
+  cssLink.href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css";
+  cssLink.rel = "stylesheet";
+  cssLink.integrity = "sha384-Gtvn6A1SdT1oTi16rjYI6X1u1G4IM6zD0RbzWAcUuCdC7RlIrGb1n8H6sVfyc2Yg";
+  cssLink.crossOrigin = "anonymous";
+  document.head.appendChild(cssLink);
+
+  // Bootstrap Icons (opcional)
+  const iconLink = document.createElement("link");
+  iconLink.href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css";
+  iconLink.rel = "stylesheet";
+  document.head.appendChild(iconLink);
+
+  // JS Bundle
+  const script = document.createElement("script");
+  script.src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js";
+  script.integrity = "sha384-Cw9F3z+1EEXNPAIXF7opbX/NqEPXYYs+Q9dBoHtLNjOnCMgS3SVxvUZonhzGFLX8";
+  script.crossOrigin = "anonymous";
+  document.body.appendChild(script);
 };
 
 export default CadastroPaciente;

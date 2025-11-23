@@ -33,6 +33,7 @@ const Historico = () => {
 
     fetchAvaliacoes();
   }, [pacienteId]);
+  
 
 
   if (!pacienteId) {
@@ -42,7 +43,8 @@ const Historico = () => {
         <p>Nenhum paciente selecionado.</p>
         <button
           className="btn btn-primary"
-          onClick={() => navigate(`/avaliar/${pacienteId}`)}
+          //onClick={() => navigate(`/avaliar/${pacienteId}`)}
+          onClick={() => navigate(`/protocolo/${pacienteId}`)}
         >
           Avaliar Postura
         </button>
@@ -85,7 +87,8 @@ const Historico = () => {
           <h2 className="text-center mb-4">Histórico de Avaliações do Paciente</h2>
           <button
               className="btn btn-primary"
-              onClick={() => navigate(`/avaliar/${pacienteId}`)}
+              //onClick={() => navigate(`/avaliar/${pacienteId}`)}
+              onClick={() => navigate(`/protocolo/${pacienteId}`)}
               style={{ marginBottom: "20px" }}
           >   
               Avaliar Postura

@@ -105,7 +105,7 @@ const CadastroMedico = () => {
                       padding: "40px 0",
                     }}
                   >
-                    <h2 className="fw-bold">Cadastro de Médicos</h2>
+                    <h2 className="fw-bold">Cadastro de Fisioterapeutas</h2>
                   </div>
           
           <div className="container my-5">
@@ -162,7 +162,7 @@ const CadastroMedico = () => {
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label>CRM:</label>
+                  <label>CREFITO:</label>
                   <input type="text" name="crm" value={medico.crm} onChange={handleChange} className="form-control" />
                 </div>
 
