@@ -12,6 +12,7 @@ import Historico from "./historico";
 import App from "./App"; // seu componente de avaliação frontal
 import Sagital from "./Sagital";
 import Sobre from "./Sobre";
+import Protocolo from "./Protocolo";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -32,6 +33,7 @@ root.render(
       <Route path="/historico" element={<Historico />} />
       <Route path="*" element={<h1>Página não encontrada</h1>} />
       <Route path="/sobre" element={<Sobre />} />
+      <Route path="/protocolo/:id" element={<Protocolo />} />
     </Routes>
   </BrowserRouter>
 );
