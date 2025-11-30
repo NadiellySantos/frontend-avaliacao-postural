@@ -52,3 +52,9 @@
   background-color: #dc3545;
   color: #fff;
 }
+
+.containerFisioterapeutas{
+  display: flex;
+  justify-content: space-between;
+}
+
