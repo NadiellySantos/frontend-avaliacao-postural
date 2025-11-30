@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Helmet } from "react-helmet";
 import "./pacientes.css"; // Você pode usar esse arquivo para customizações específicas
-import Header from "./header.js";
+import HeaderPacientes from "./headerPacientes.js";
 import Footer from "./footer.js";
 
 
@@ -40,7 +40,7 @@ const Pacientes = () => {
         />
       </Helmet>
       <div className="container-page" style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-        <Header />
+        <HeaderPacientes />
         <div className="containerPacientes">
           <div className="page-title">
           <div className="breadcrumbs">

@@ -4,7 +4,7 @@ import axios from "axios";
 import { IMaskInput } from 'react-imask';
 import './cadastroMedico.css'; // <- CSS exclusivo desta página
 import { Helmet } from "react-helmet";
-import Header from "./header.js";
+import HeaderFisioterapeutas from "./headerFisioterapeutas.js";
 import Footer from "./footer.js";
 
 const CadastroMedico = () => {
@@ -94,7 +94,7 @@ const CadastroMedico = () => {
       <div className="container-fluid cadastro-medico-container min-vh-100">
 
         
-          <Header />
+          <HeaderFisioterapeutas />
           
                   <div
                     className="page-title text-center text-dark"
