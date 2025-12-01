@@ -230,7 +230,7 @@ const CadastroPaciente = () => {
             </div>
 
             <div className="col-md-6">
-              <label className="form-label">Tipo Corporal:</label>
+              <label className="form-label">Biotipo:</label>
               <input
                 type="text"
                 name="tipo_corporal"

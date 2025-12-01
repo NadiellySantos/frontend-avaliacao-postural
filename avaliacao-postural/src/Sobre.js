@@ -5,10 +5,11 @@ import { Helmet } from "react-helmet";
 
 export default function Sobre() {
     const navigate = useNavigate();
+
   return (
     <>
           <Helmet>
-            <title>Login - AlignMe</title>
+            <title>Sobre - AlignMe</title>
             <link
               rel="stylesheet"
               href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -18,12 +19,14 @@ export default function Sobre() {
               href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
             />
           </Helmet>
+
         <div className="sobre-container">
             <button className="btn btn-outline-secondary" onClick={() => navigate(-1)}>
             <i className="bi bi-arrow-left"></i> Voltar
             </button>
+
         <div className="sobre-header">
-            <h1>Sobre o Sistema de Avaliação Postural</h1>
+            <h1><center>Sistema de Avaliação Postural</center></h1>
             <p>
             Uma solução moderna que une <strong>fotogrametria</strong> e{" "}
             <strong>visão computacional</strong> para auxiliar fisioterapeutas na
@@ -32,7 +35,10 @@ export default function Sobre() {
         </div>
 
         <div className="sobre-section">
-            <h2>🎯 Objetivo</h2>
+            <h2>
+                <i className="bi bi-bullseye me-2"></i>
+                Objetivo
+            </h2>
             <p>
             O sistema tem como objetivo simplificar e padronizar o processo de
             <strong> avaliação postural</strong> através do uso de tecnologias de
@@ -42,7 +48,10 @@ export default function Sobre() {
         </div>
 
         <div className="sobre-section">
-            <h2>🧠 Tecnologias Utilizadas</h2>
+            <h2>
+                <i className="bi bi-cpu-fill me-2"></i>
+                Tecnologias Utilizadas
+            </h2>
             <ul>
             <li>
                 <strong>React</strong> — interface moderna, responsiva e modular.
@@ -63,7 +72,10 @@ export default function Sobre() {
         </div>
 
         <div className="sobre-section">
-            <h2>⚙️ Como Funciona</h2>
+            <h2>
+                <i className="bi bi-gear-fill me-2"></i>
+                Como Funciona
+            </h2>
             <p>
             O fisioterapeuta captura uma fotografia do paciente em vista sagital
             (lateral) ou frontal e insere uma <strong>referência de escala</strong>{" "}
@@ -81,7 +93,10 @@ export default function Sobre() {
         </div>
 
         <div className="sobre-section">
-            <h2>👩‍⚕️ Público-Alvo</h2>
+            <h2>
+                <i className="bi bi-person-heart me-2"></i>
+                Público-Alvo
+            </h2>
             <p>
             Desenvolvido especialmente para <strong>fisioterapeutas</strong>,
             estudantes e pesquisadores da área da saúde interessados em aprimorar
@@ -91,7 +106,10 @@ export default function Sobre() {
         </div>
 
         <div className="sobre-section">
-            <h2>🚀 Benefícios</h2>
+            <h2>
+                <i className="bi bi-rocket-takeoff me-2"></i>
+                Benefícios
+            </h2>
             <ul>
             <li>Maior precisão nas medições posturais.</li>
             <li>Redução de erros humanos.</li>
@@ -100,9 +118,8 @@ export default function Sobre() {
             </ul>
         </div>
             <div className="sobre-footer">
-                <p>
-                © {new Date().getFullYear()} — Sistema de Avaliação Postural por
-                Fotogrametria e Visão Computacional.
+                <p><center>© {new Date().getFullYear()} — Sistema computacional para avaliação postural mediante
+                fotogrametria.</center>
                 </p>
             </div>
         </div>

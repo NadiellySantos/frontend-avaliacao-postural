@@ -68,11 +68,12 @@ const Login = () => {
       </Helmet>
 
       <div className="login-wrapper">
-        <div>
-          <button className="botao-sobre" onClick={irParaSobre}>
-            Sobre o Sistema
-          </button>
+
+        <div className="alignme-logo-login">
+          <i className="bi bi-hospital alignme-logo-icon"></i>
+          <span className="alignme-logo-text">AlignMe</span>
         </div>
+
         <div className="login-card">
           <h3 className="login-title">
             <i className="bi bi-person-circle"></i> Login
@@ -128,6 +129,13 @@ const Login = () => {
             </div>
           </form>
         </div>
+
+        <div>
+          <button className="botao-sobre-link" onClick={() => navigate("/sobre")}>
+            Sobre o Sistema
+          </button>
+        </div>
+
       </div>
 
       <Footer />

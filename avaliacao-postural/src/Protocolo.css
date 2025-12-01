@@ -102,3 +102,23 @@ button.btn-outline-secondary {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+.protocolo-modal-body {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Justifica todo o texto dentro do modal de Protocolo */
+.protocolo-modal-body p,
+.protocolo-modal-body ul,
+.protocolo-modal-body li {
+  text-align: justify;
+}
+
+.protocolo-modal-body p {
+  line-height: 1.6;
+}
+
+.protocolo-modal-body li {
+  margin-bottom: 8px;
+}

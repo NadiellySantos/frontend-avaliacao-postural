@@ -129,7 +129,7 @@ const CadastroAvaliacao = () => {
           <div className="cadastro-avaliacao-container">
             <div className="card-avaliacao">
               <div className="card-header-avaliacao">
-                <h2>Cadastro de Avaliação Médica</h2>
+                <h2>Cadastro de Avaliação</h2>
               </div>
 
               <div className="card-body-avaliacao">
@@ -138,7 +138,7 @@ const CadastroAvaliacao = () => {
                   {/* Coluna Frontal */}
                   <div className="coluna-imagem-medidas">
                     <div className="container-imagem">
-                      <h5>Imagem Frontal Processada</h5>
+                      <h5>Vista Frontal Processada</h5>
                       {formData.foto_frontal ? (
                         <img 
                           src={formData.foto_frontal} 
@@ -151,7 +151,7 @@ const CadastroAvaliacao = () => {
                     </div>
                     
                     <div className="container-medidas">
-                      <h5>Medidas Frontal</h5>
+                      <h5>Medidas Vista Frontal</h5>
                       {frontal?.distancias ? (
                         <ul className="lista-medidas">
                           {frontal.distancias.map((medida, index) => (
@@ -172,7 +172,7 @@ const CadastroAvaliacao = () => {
                   {/* Coluna Sagital */}
                   <div className="coluna-imagem-medidas">
                     <div className="container-imagem">
-                      <h5>Imagem Sagital Processada</h5>
+                      <h5>Vista Sagital Processada</h5>
                       {formData.foto_sagital ? (
                         <img 
                           src={formData.foto_sagital} 
@@ -185,7 +185,7 @@ const CadastroAvaliacao = () => {
                     </div>
                     
                     <div className="container-medidas">
-                      <h5>Medidas Sagital</h5>
+                      <h5>Medidas Vista Sagital</h5>
                       {sagital?.distancias ? (
                         <ul className="lista-medidas">
                           {sagital.distancias.map((medida, index) => (
@@ -221,16 +221,6 @@ const CadastroAvaliacao = () => {
                 {/* ✅ FORMULÁRIO COM CAMPOS DISTRIBUÍDOS PROPORCIONALMENTE */}
                 <form onSubmit={handleSubmit} className="form-avaliacao">
                   {/* Primeira linha - ID Paciente e Data */}
-                  <div className="linha-formulario">
-                    <div className="campo-formulario">
-                      <label>ID do Paciente:</label>
-                      <input 
-                        type="text" 
-                        value={formData.id_paciente} 
-                        readOnly 
-                      />
-                    </div>
-
                     <div className="campo-formulario">
                       <label>Data da Avaliação:</label>
                       <input 
@@ -241,6 +231,16 @@ const CadastroAvaliacao = () => {
                         required 
                       />
                     </div>
+                  <div className="linha-formulario">
+                    <div className="campo-formulario">
+                      {/* <label>ID do Paciente:</label> */}
+                      <input 
+                        type="hidden" 
+                        value={formData.id_paciente} 
+                        // readOnly 
+                      />
+                    </div>
+
                   </div>
 
                   {/* Segunda linha - CPF e Altura */}

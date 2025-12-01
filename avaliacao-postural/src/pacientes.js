@@ -46,8 +46,8 @@ const Pacientes = () => {
           <div className="breadcrumbs">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
-                <li className="breadcrumb-item"><a href="/"><i className="bi bi-house"></i> Home</a></li>
-                <li className="breadcrumb-item active current">Pacientes</li>
+                {/* <li className="breadcrumb-item"><a href="/"><i className="bi bi-house"></i> Home</a></li> */}
+                {/* <li className="breadcrumb-item active current">Pacientes</li> */}
               </ol>
             </nav>
           </div>
@@ -87,8 +87,6 @@ const Pacientes = () => {
         <Footer style={{ alignSelf: "end" }} />
       </div>
      
- 
-
       {/* Botão Voltar para Pacientes */}
     </>
   );

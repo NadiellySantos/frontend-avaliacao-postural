@@ -167,7 +167,7 @@ const Sagital = () => {
   return (
     <>
       <Helmet>
-        <title>Avaliação Sagital - AlignMe</title>
+        <title>Avaliação Vista Sagital - AlignMe</title>
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -183,7 +183,7 @@ const Sagital = () => {
 
         <div className="avaliacao-sagital-container">
           <h2 className="titulo-sagital-principal text-center">
-            Avaliação Postural - Sagital
+            Avaliação Postural - Vista Sagital
           </h2>
 
           <div style={{ display: "flex", flexDirection: "column", marginBottom: "20px" }}>
@@ -237,7 +237,7 @@ const Sagital = () => {
                     <img
                       ref={imageRef}
                       src={imageUrl}
-                      alt="Imagem sagital selecionada"
+                      alt="Vista sagital selecionada"
                       onDoubleClick={handleDoubleClick}
                       style={{
                         display: "block",

@@ -49,7 +49,7 @@ const CadastroMedico = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      setMensagem("Médico cadastrado com sucesso!");
+      setMensagem("Fisoterapeuta cadastrado com sucesso!");
       setMedico({
         cpf: "",
         nome: "",
@@ -62,7 +62,7 @@ const CadastroMedico = () => {
         senha: ""
       });
     } catch (error) {
-      setMensagem(error.response?.data?.detail || "Erro ao cadastrar médico.");
+      setMensagem(error.response?.data?.detail || "Erro ao cadastrar fisioterapeuta.");
     }
   };
 
@@ -187,7 +187,7 @@ const CadastroMedico = () => {
               </div>
 
               <div className="d-flex justify-content-between mt-4">
-                <button type="button" onClick={handleVoltar} className="btn btn-secondary">Voltar</button>
+                {/* <button type="button" onClick={handleVoltar} className="btn btn-secondary">Voltar</button> */}
                 <button type="submit" className="btn btn-primary">Salvar</button>
               </div>
 

@@ -179,7 +179,7 @@ const App = () => {
         <Header />
 
         <div className="avaliacao-frontal-container">
-          <h2 className="titulo-frontal-principal">Avaliação Postural - Frontal</h2>
+          <h2 className="titulo-frontal-principal">Avaliação Postural - Vista Frontal</h2>
 
           <div style={{ display: "flex", flexDirection: "column", marginBottom: "20px" }}>
             <p style={{ marginLeft: "20px" }}>Imagem exemplo.</p>

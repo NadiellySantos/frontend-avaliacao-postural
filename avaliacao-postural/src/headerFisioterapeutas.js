@@ -11,15 +11,19 @@ const HeaderFisioterapeutas = () => {
   };
 
   return (
-    <header className="custom-header">
-      <div className="containerFisioterapeutas">
-        {/* Botão Voltar */}
-        <button style={{marginLeft: "6%"}} className="btn btn-outline-secondary" onClick={() => navigate(-1)}>
+    <header className="custom-header header-fisio">
+      <div className="header-container">
+
+        {/* Botão Voltar à ESQUERDA */}
+        <button
+          className="btn btn-outline-secondary header-back-btn"
+          onClick={() => navigate(-1)}
+        >
           <i className="bi bi-arrow-left"></i> Voltar
         </button>
-       
-        {/* Nome do App */}
-        <h5 style={{marginRight: "40%"}} className="headerFisioterapeutasTitle">
+
+        {/* Título CENTRALIZADO */}
+        <h5 className="header-title-centered">
           <i className="bi bi-hospital"></i> AlignMe
         </h5>
 

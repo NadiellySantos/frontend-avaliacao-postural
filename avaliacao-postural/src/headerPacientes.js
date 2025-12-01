@@ -11,17 +11,18 @@ const HeaderPacientes = () => {
   };
 
   return (
-    <header className="custom-header">
-      <div className="container">
-        
-
-        {/* Nome do App */}
-        <h5 style={{marginLeft: "50%"}}>
+    <header className="custom-header header-pacientes">
+      <div className="header-container">
+        {/* TÍTULO CENTRALIZADO */}
+        <h5 className="header-title-centered">
           <i className="bi bi-hospital"></i> AlignMe
         </h5>
 
-        {/* Botão Logout */}
-        <button className="btn btn-outline-danger" onClick={handleLogout}>
+        {/* BOTÃO À DIREITA */}
+        <button
+          className="btn btn-outline-danger header-logout-btn"
+          onClick={handleLogout}
+        >
           <i className="bi bi-box-arrow-right"></i> Logout
         </button>
       </div>

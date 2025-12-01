@@ -140,7 +140,7 @@ const Historico = () => {
                         <div style={{ display: "flex", flexDirection: "colunm" }}>
                           {/* IMAGEM FRONTAL */}
                           <div className="col-md-6">
-                            <h5>Imagem Frontal</h5>
+                            <h5>Vista Frontal</h5>
                             {h.foto_frontal ? (
                               <img
                                 src={
@@ -157,7 +157,7 @@ const Historico = () => {
                                 }}
                               />
                             ) : (
-                              <p>Nenhuma imagem frontal disponível.</p>
+                              <p>Nenhuma vista frontal disponível.</p>
                             )}
 
                             <h6 className="mt-3">📏 Medidas Frontais:</h6>
@@ -178,7 +178,7 @@ const Historico = () => {
 
                           {/* IMAGEM SAGITAL */}
                           <div className="col-md-6">
-                            <h5>Imagem Sagital</h5>
+                            <h5>Vista Sagital</h5>
                             {h.foto_sagital ? (
                               <img
                                 src={
@@ -195,7 +195,7 @@ const Historico = () => {
                                 }}
                               />
                             ) : (
-                              <p>Nenhuma imagem sagital disponível.</p>
+                              <p>Nenhuma vista sagital disponível.</p>
                             )}                            
                             {Array.isArray(h.angulos_sagital) && h.angulos_sagital.length > 0 ? (
                               <>
