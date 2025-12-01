@@ -1,4 +1,4 @@
-# 🧍‍♀️🧍‍♂️ Frontend — Sistema computacional para avaliação postural mediante fotogrametria
+# Frontend — Sistema computacional para avaliação postural mediante fotogrametria 🧍‍♀️🧍‍♂️📏
 
 Este repositório contém o **frontend web** do sistema de avaliação postural **AlignMe**.  
 A aplicação foi desenvolvida em **React** e consome os serviços do backend em Python (FastAPI) para:
